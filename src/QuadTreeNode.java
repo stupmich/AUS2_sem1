@@ -2,10 +2,15 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class QuadTreeNode<T extends Comparable<T> >  {
-    private double minX;
-    private double minY;
-    private double maxX;
-    private double maxY;
+    private double minXBoundary;
+    private double minYBoundary;
+    private double maxXBoundary;
+    private double maxYBoundary;
+
+    private double minXElement;
+    private double minYElement;
+    private double maxXElement;
+    private double maxYElement;
 
     private QuadTreeNode<T> parent;
 
@@ -14,60 +19,69 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     private QuadTreeNode<T> SESon;
     private QuadTreeNode<T> SWSon;
 
+    private QuadTreeNode<T>[] sons;
+
     private T data;
     private LinkedList<T> intersectingData;
 
-    public QuadTreeNode(double minX, double minY, double maxX, double maxY, QuadTreeNode<T> parent, T data) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+//    public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, QuadTreeNode<T> parent, T data) {
+//        this.minXBoundary = p_minXBoundary;
+//        this.minYBoundary = p_minYBoundary;
+//        this.maxXBoundary = p_maxXBoundary;
+//        this.maxYBoundary = p_maxYBoundary;
+//        this.parent = parent;
+//        this.data = data;
+//    }
+
+    public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, QuadTreeNode<T> parent) {
+        this.minXBoundary = p_minXBoundary;
+        this.minYBoundary = p_minYBoundary;
+        this.maxXBoundary = p_maxXBoundary;
+        this.maxYBoundary = p_maxYBoundary;
         this.parent = parent;
-        this.data = data;
     }
 
     public void split() {
-        double halfX = (this.maxX - this.minX) / 2;
-        double halfY = (this.maxY - this.minY) / 2;
+        double halfX = (this.maxXBoundary - this.minXBoundary) / 2;
+        double halfY = (this.maxYBoundary - this.minYBoundary) / 2;
 
-        NWSon = new QuadTreeNode<T>(this.minX, this.minY + halfY, this.minX + halfX, this.maxY, this, null);
+        NWSon = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary + halfY, this.minXBoundary + halfX, this.maxYBoundary, this);
 
-//        NWSon.minX = this.minX;
-//        NWSon.minY = this.minY + halfY;
-//        NWSon.maxX = this.minX + halfX;
-//        NWSon.maxY = this.maxY;
+        NESon = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary + halfY, this.maxXBoundary, this.maxYBoundary , this);
 
-        NESon = new QuadTreeNode<T>(this.minX + halfX, this.minY + halfY, this.maxX, this.maxY , this, null);
+        SESon = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary, this.maxXBoundary,  this.minYBoundary + halfY , this);
 
-//        NESon.minX = this.minX + halfX;
-//        NESon.minY = this.minY + halfY;
-//        NESon.maxX = this.maxX;
-//        NESon.maxY = this.maxY;
-        SESon = new QuadTreeNode<T>(this.minX + halfX, this.minY, this.maxX,  this.minY + halfY , this, null);
+        SWSon = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary, this.minXBoundary + halfX, this.minYBoundary + halfY , this);
 
-//        SESon.minX = this.minX + halfX;
-//        SESon.minY = this.minY;
-//        SESon.maxX = this.maxX;
-//        SESon.maxY = this.minY + halfY;
-
-        SWSon = new QuadTreeNode<T>(this.minX, this.minY, this.minX + halfX, this.minY + halfY , this, null);
-
-//        SWSon.minX = this.minX;
-//        SWSon.minY = this.minY;
-//        SWSon.maxX = this.minX + halfX;
-//        SWSon.maxY = this.maxY + halfY;
+        sons = new QuadTreeNode[4];
+        sons[0] = NWSon;
+        sons[1] = NESon;
+        sons[2] = SESon;
+        sons[3] = SWSon;
     }
 
-    public boolean contains(double p_minX, double p_minY, double p_maxX, double p_maxY) {
-        return (p_minX > minX && p_maxX < maxX && p_minY > minY && p_maxY < maxY);
+    public boolean contains(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
+        return (p_minXBoundary > minXBoundary && p_maxXBoundary < maxXBoundary && p_minYBoundary > minYBoundary && p_maxYBoundary < maxYBoundary);
+    }
+
+    public void insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
+        this.data = data;
+        this.minXElement = p_minXElement;
+        this.minYElement = p_minYElement;
+        this.maxXElement = p_maxXElement;
+        this.maxYElement = p_maxYElement;
     }
 
     public T removeData() {
         T helpData = this.data;
         this.data = null;
+        this.minXElement = 0;
+        this.minYElement = 0;
+        this.maxXElement = 0;
+        this.maxYElement = 0;
         return helpData;
     }
-
+    
     public T getData() {
         return data;
     }
@@ -90,5 +104,73 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public QuadTreeNode<T> getSWSon() {
         return SWSon;
+    }
+
+    public double getMinXBoundary() {
+        return minXBoundary;
+    }
+
+    public void setMinXBoundary(double minXBoundary) {
+        this.minXBoundary = minXBoundary;
+    }
+
+    public double getMinYBoundary() {
+        return minYBoundary;
+    }
+
+    public void setMinYBoundary(double minYBoundary) {
+        this.minYBoundary = minYBoundary;
+    }
+
+    public double getMaxXBoundary() {
+        return maxXBoundary;
+    }
+
+    public void setMaxXBoundary(double maxXBoundary) {
+        this.maxXBoundary = maxXBoundary;
+    }
+
+    public double getMaxYBoundary() {
+        return maxYBoundary;
+    }
+
+    public void setMaxYBoundary(double maxYBoundary) {
+        this.maxYBoundary = maxYBoundary;
+    }
+
+    public double getMinXElement() {
+        return minXElement;
+    }
+
+    public void setMinXElement(double minXElement) {
+        this.minXElement = minXElement;
+    }
+
+    public double getMinYElement() {
+        return minYElement;
+    }
+
+    public void setMinYElement(double minYElement) {
+        this.minYElement = minYElement;
+    }
+
+    public double getMaxXElement() {
+        return maxXElement;
+    }
+
+    public void setMaxXElement(double maxXElement) {
+        this.maxXElement = maxXElement;
+    }
+
+    public double getMaxYElement() {
+        return maxYElement;
+    }
+
+    public void setMaxYElement(double maxYElement) {
+        this.maxYElement = maxYElement;
+    }
+
+    public QuadTreeNode<T>[] getSons() {
+        return sons;
     }
 }

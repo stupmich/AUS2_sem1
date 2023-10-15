@@ -6,46 +6,80 @@ public class QuadTree<T extends Comparable<T>>  {
     private double maxX;
     private double maxY;
 
-    public QuadTree(double minX, double minY, double maxX, double maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+    public QuadTree(double p_minX, double p_minY, double p_maxX, double p_maxY) {
+        this.minX = p_minX;
+        this.minY = p_minY;
+        this.maxX = p_maxX;
+        this.maxY = p_maxY;
         this.root = null;
     }
 
-    public T insert(double minX, double minY, double maxX, double maxY, T data) {
+    public T insert(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
         QuadTreeNode<T> new_node = null;
+        int count = 0;
 
         if (root == null) {
-            root = new QuadTreeNode<T>(this.minX, this.minY, this.maxX, this.maxY, null, data);
+            root = new QuadTreeNode<T>(this.minX, this.minY, this.maxX, this.maxY, null);
+            root.insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement, data);
             new_node = root;
         } else {
             boolean end = false;
             QuadTreeNode<T> help_node = root;
             T helpData = null;
+            double helpMinXElement;
+            double helpMinYElement;
+            double helpMaxXElement;
+            double helpMaxYElement;
 
             while (end == false) {
                 if(help_node.getData() != null) {
+                    helpMinXElement =help_node.getMinXElement();
+                    helpMinYElement =help_node.getMinYElement();
+                    helpMaxXElement =help_node.getMaxXElement();
+                    helpMaxYElement =help_node.getMaxYElement();
                     helpData = help_node.removeData();
+
                     help_node.split();
 
-                    if (help_node.getNWSon().contains(minX, minY, maxX, maxY)) {
+                    for (int i = 0; i < 4; i++) {
+                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)
+                            && help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement))
+                        {
+                            help_node = help_node.getSons()[i];
+                            help_node.insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
+                            break;
+                        }
 
+                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
+                            help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
+                            count++;
+                            new_node = help_node.getSons()[i];
+                        }
+
+                        if (help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement)) {
+                            help_node.getSons()[i].insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
+                            count++;
+                        }
                     }
 
-                    if (help_node.getNESon().contains(minX, minY, maxX, maxY)) {
-
+                    if (count == 2) {
+                        end = true;
                     }
 
-                    if (help_node.getSESon().contains(minX, minY, maxX, maxY)) {
-
+                } else {
+                    for (int i = 0; i < 4; i++) {
+                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
+                        {
+                            if (help_node.getSons()[i].getData() != null) {
+                                help_node = help_node.getSons()[i];
+                            } else {
+                                help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
+                                new_node = help_node.getSons()[i];
+                                end = true;
+                            }
+                            break;
+                        }
                     }
-
-                    if (help_node.getSWSon().contains(minX, minY, maxX, maxY)) {
-
-                    }
-
                 }
             }
         }
