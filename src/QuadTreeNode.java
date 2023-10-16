@@ -39,6 +39,7 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         this.maxXBoundary = p_maxXBoundary;
         this.maxYBoundary = p_maxYBoundary;
         this.parent = parent;
+        this.intersectingData = new LinkedList<>();
     }
 
     public void split() {
@@ -62,6 +63,22 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public boolean contains(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
         return (p_minXBoundary > minXBoundary && p_maxXBoundary < maxXBoundary && p_minYBoundary > minYBoundary && p_maxYBoundary < maxYBoundary);
+    }
+
+    public boolean intersects(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
+        return !(p_maxXBoundary < minXBoundary || p_minXBoundary > maxXBoundary || p_maxYBoundary < minYBoundary || p_minYBoundary > maxYBoundary);
+    }
+
+    public boolean intersectsInnerLines(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
+        double halfX = (this.maxXBoundary - this.minXBoundary) / 2;
+        double halfY = (this.maxYBoundary - this.minYBoundary) / 2;
+
+        // Check if the provided boundaries intersect through the lines halfX or halfY
+        boolean xIntersectsHalfX = !(p_maxXBoundary < minXBoundary + halfX || p_minXBoundary > minXBoundary + halfX);
+        boolean yIntersectsHalfY = !(p_maxYBoundary < minYBoundary + halfY || p_minYBoundary > minYBoundary + halfY);
+
+        // Return true only if the provided boundaries intersect through either halfX or halfY
+        return xIntersectsHalfX || yIntersectsHalfY;
     }
 
     public void insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
@@ -172,5 +189,13 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public QuadTreeNode<T>[] getSons() {
         return sons;
+    }
+
+    public QuadTreeNode<T> getParent() {
+        return parent;
+    }
+
+    public LinkedList<T> getIntersectingData() {
+        return intersectingData;
     }
 }

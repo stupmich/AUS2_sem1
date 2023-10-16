@@ -14,14 +14,13 @@ public class QuadTree<T extends Comparable<T>>  {
         this.root = null;
     }
 
-    public T insert(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
-        QuadTreeNode<T> new_node = null;
-        int count = 0;
+    public boolean insert(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
+        boolean inserted = false;
 
         if (root == null) {
             root = new QuadTreeNode<T>(this.minX, this.minY, this.maxX, this.maxY, null);
             root.insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement, data);
-            new_node = root;
+            inserted = true;
         } else {
             boolean end = false;
             QuadTreeNode<T> help_node = root;
@@ -41,6 +40,8 @@ public class QuadTree<T extends Comparable<T>>  {
 
                     help_node.split();
 
+                    boolean inter = help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement);
+
                     for (int i = 0; i < 4; i++) {
                         if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)
                             && help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement))
@@ -52,31 +53,39 @@ public class QuadTree<T extends Comparable<T>>  {
 
                         if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
                             help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
-                            count++;
-                            new_node = help_node.getSons()[i];
+                            end = true;
+                            inserted = true;
                         }
 
                         if (help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement)) {
                             help_node.getSons()[i].insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
-                            count++;
                         }
                     }
-
-                    if (count == 2) {
-                        end = true;
-                    }
-
                 } else {
+                    boolean inter = help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement);
+
+
                     for (int i = 0; i < 4; i++) {
                         if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
                         {
                             if (help_node.getSons()[i].getData() != null) {
                                 help_node = help_node.getSons()[i];
                             } else {
-                                help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
-                                new_node = help_node.getSons()[i];
-                                end = true;
+                                if (help_node.getSons()[i].getSons() != null) {
+                                    help_node = help_node.getSons()[i];
+                                } else {
+                                    help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
+                                    end = true;
+                                }
                             }
+                            break;
+                        }
+
+                        if (help_node.getSons()[i].intersects(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
+                        {
+                            help_node.getSons()[i].getParent().getIntersectingData().add(data);
+                            end = true;
+                            inserted = true;
                             break;
                         }
                     }
@@ -84,6 +93,6 @@ public class QuadTree<T extends Comparable<T>>  {
             }
         }
 
-        return new_node.getData();
+        return inserted;
     }
 }
