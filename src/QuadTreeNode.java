@@ -12,32 +12,21 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     private double maxXElement;
     private double maxYElement;
 
-    private QuadTreeNode<T> parent;
+    private int level;
 
-    private QuadTreeNode<T> NWSon;
-    private QuadTreeNode<T> NESon;
-    private QuadTreeNode<T> SESon;
-    private QuadTreeNode<T> SWSon;
+    private QuadTreeNode<T> parent;
 
     private QuadTreeNode<T>[] sons;
 
     private T data;
     private LinkedList<T> intersectingData;
 
-//    public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, QuadTreeNode<T> parent, T data) {
-//        this.minXBoundary = p_minXBoundary;
-//        this.minYBoundary = p_minYBoundary;
-//        this.maxXBoundary = p_maxXBoundary;
-//        this.maxYBoundary = p_maxYBoundary;
-//        this.parent = parent;
-//        this.data = data;
-//    }
-
-    public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, QuadTreeNode<T> parent) {
+    public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, int p_level, QuadTreeNode<T> parent) {
         this.minXBoundary = p_minXBoundary;
         this.minYBoundary = p_minYBoundary;
         this.maxXBoundary = p_maxXBoundary;
         this.maxYBoundary = p_maxYBoundary;
+        this.level = p_level;
         this.parent = parent;
         this.intersectingData = new LinkedList<>();
     }
@@ -46,19 +35,11 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         double halfX = (this.maxXBoundary - this.minXBoundary) / 2;
         double halfY = (this.maxYBoundary - this.minYBoundary) / 2;
 
-        NWSon = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary + halfY, this.minXBoundary + halfX, this.maxYBoundary, this);
-
-        NESon = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary + halfY, this.maxXBoundary, this.maxYBoundary , this);
-
-        SESon = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary, this.maxXBoundary,  this.minYBoundary + halfY , this);
-
-        SWSon = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary, this.minXBoundary + halfX, this.minYBoundary + halfY , this);
-
         sons = new QuadTreeNode[4];
-        sons[0] = NWSon;
-        sons[1] = NESon;
-        sons[2] = SESon;
-        sons[3] = SWSon;
+        sons[0] = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary + halfY, this.minXBoundary + halfX, this.maxYBoundary,this.level + 1, this);
+        sons[1] = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary + halfY, this.maxXBoundary, this.maxYBoundary ,this.level + 1, this);
+        sons[2] = new QuadTreeNode<T>(this.minXBoundary + halfX, this.minYBoundary, this.maxXBoundary,  this.minYBoundary + halfY ,this.level + 1, this);
+        sons[3] = new QuadTreeNode<T>(this.minXBoundary, this.minYBoundary, this.minXBoundary + halfX, this.minYBoundary + halfY ,this.level + 1, this);
     }
 
     public boolean contains(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
@@ -105,22 +86,6 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public void setData(T data) {
         this.data = data;
-    }
-
-    public QuadTreeNode<T> getNWSon() {
-        return NWSon;
-    }
-
-    public QuadTreeNode<T> getNESon() {
-        return NESon;
-    }
-
-    public QuadTreeNode<T> getSESon() {
-        return SESon;
-    }
-
-    public QuadTreeNode<T> getSWSon() {
-        return SWSon;
     }
 
     public double getMinXBoundary() {
@@ -197,5 +162,9 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public LinkedList<T> getIntersectingData() {
         return intersectingData;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
