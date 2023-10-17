@@ -40,53 +40,58 @@ public class QuadTree<T extends Comparable<T>>  {
 
                     help_node.split();
 
-                    boolean inter = help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement);
+                    if (help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
+                        help_node.getIntersectingData().add(data);
+                        end = true;
+                    } else {
+                        for (int i = 0; i < 4; i++) {
+                            if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)
+                                    && help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement))
+                            {
+                                help_node = help_node.getSons()[i];
+                                help_node.insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
+                                break;
+                            }
 
-                    for (int i = 0; i < 4; i++) {
-                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)
-                            && help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement))
-                        {
-                            help_node = help_node.getSons()[i];
-                            help_node.insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
-                            break;
-                        }
+                            if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
+                                help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
+                                end = true;
+                                inserted = true;
+                            }
 
-                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
-                            help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
-                            end = true;
-                            inserted = true;
-                        }
-
-                        if (help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement)) {
-                            help_node.getSons()[i].insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
+                            if (help_node.getSons()[i].contains(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement)) {
+                                help_node.getSons()[i].insertData(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement, helpData);
+                            }
                         }
                     }
                 } else {
-                    boolean inter = help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement);
-
-
-                    for (int i = 0; i < 4; i++) {
-                        if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
-                        {
-                            if (help_node.getSons()[i].getData() != null) {
-                                help_node = help_node.getSons()[i];
-                            } else {
-                                if (help_node.getSons()[i].getSons() != null) {
+                    if (help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) {
+                        help_node.getIntersectingData().add(data);
+                        end = true;
+                    } else {
+                        for (int i = 0; i < 4; i++) {
+                            if (help_node.getSons()[i].contains(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
+                            {
+                                if (help_node.getSons()[i].getData() != null) {
                                     help_node = help_node.getSons()[i];
                                 } else {
-                                    help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
-                                    end = true;
+                                    if (help_node.getSons()[i].getSons() != null) {
+                                        help_node = help_node.getSons()[i];
+                                    } else {
+                                        help_node.getSons()[i].insertData(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement,data);
+                                        end = true;
+                                    }
                                 }
+                                break;
                             }
-                            break;
-                        }
 
-                        if (help_node.getSons()[i].intersects(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
-                        {
-                            help_node.getSons()[i].getParent().getIntersectingData().add(data);
-                            end = true;
-                            inserted = true;
-                            break;
+//                        if (help_node.getSons()[i].intersects(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement))
+//                        {
+//                            help_node.getSons()[i].getParent().getIntersectingData().add(data);
+//                            end = true;
+//                            inserted = true;
+//                            break;
+//                        }
                         }
                     }
                 }

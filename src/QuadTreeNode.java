@@ -62,7 +62,7 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     }
 
     public boolean contains(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
-        return (p_minXBoundary > minXBoundary && p_maxXBoundary < maxXBoundary && p_minYBoundary > minYBoundary && p_maxYBoundary < maxYBoundary);
+        return (p_minXBoundary >= minXBoundary && p_maxXBoundary <= maxXBoundary && p_minYBoundary >= minYBoundary && p_maxYBoundary <= maxYBoundary);
     }
 
     public boolean intersects(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
