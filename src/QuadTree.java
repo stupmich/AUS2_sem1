@@ -48,7 +48,7 @@ public class QuadTree<T extends Comparable<T>>  {
                     help_node.split();
 
                     if(help_node.intersectsInnerLines(helpMinXElement, helpMinYElement, helpMaxXElement, helpMaxYElement)) { // original node intersects new borders
-                        help_node.getIntersectingData().add(data);
+                        help_node.getIntersectingData().add(helpData);
                     }
 
                     if (help_node.intersectsInnerLines(p_minXElement, p_minYElement, p_maxXElement, p_maxYElement)) { // new data intersects new borders
