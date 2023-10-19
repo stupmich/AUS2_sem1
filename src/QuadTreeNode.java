@@ -7,10 +7,12 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     private double maxXBoundary;
     private double maxYBoundary;
 
-    private double minXElement;
-    private double minYElement;
-    private double maxXElement;
-    private double maxYElement;
+//    private double minXElement;
+//    private double minYElement;
+//    private double maxXElement;
+//    private double maxYElement;
+
+    private QuadTreeNodeKeys<T> nodeKeys;
 
     private int level;
 
@@ -18,8 +20,8 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     private QuadTreeNode<T>[] sons;
 
-    private T data;
-    private LinkedList<T> intersectingData;
+//    private T data;
+    private LinkedList<QuadTreeNodeKeys<T>> intersectingData;
 
     public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, int p_level, QuadTreeNode<T> parent) {
         this.minXBoundary = p_minXBoundary;
@@ -62,30 +64,32 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         return xIntersectsHalfX || yIntersectsHalfY;
     }
 
-    public void insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, T data) {
-        this.data = data;
-        this.minXElement = p_minXElement;
-        this.minYElement = p_minYElement;
-        this.maxXElement = p_maxXElement;
-        this.maxYElement = p_maxYElement;
+    public void insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, int p_id, T data) {
+//        this.data = data;
+//        this.minXElement = p_minXElement;
+//        this.minYElement = p_minYElement;
+//        this.maxXElement = p_maxXElement;
+//        this.maxYElement = p_maxYElement;
+        this.nodeKeys = new QuadTreeNodeKeys(p_id,p_minXElement,p_minYElement, p_maxXElement, p_maxYElement, data);
     }
 
     public T removeData() {
-        T helpData = this.data;
-        this.data = null;
-        this.minXElement = 0;
-        this.minYElement = 0;
-        this.maxXElement = 0;
-        this.maxYElement = 0;
+        T helpData = this.nodeKeys.getData();
+//        this.data = null;
+//        this.minXElement = 0;
+//        this.minYElement = 0;
+//        this.maxXElement = 0;
+//        this.maxYElement = 0;
+        this.nodeKeys = null;
         return helpData;
     }
     
     public T getData() {
-        return data;
+        return this.nodeKeys.getData();
     }
 
     public void setData(T data) {
-        this.data = data;
+        this.nodeKeys.setData(data);
     }
 
     public double getMinXBoundary() {
@@ -121,35 +125,35 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     }
 
     public double getMinXElement() {
-        return minXElement;
+        return this.nodeKeys.getMinXElement();
     }
 
     public void setMinXElement(double minXElement) {
-        this.minXElement = minXElement;
+        this.nodeKeys.setMinXElement(minXElement);
     }
 
     public double getMinYElement() {
-        return minYElement;
+        return this.nodeKeys.getMinYElement();
     }
 
     public void setMinYElement(double minYElement) {
-        this.minYElement = minYElement;
+        this.nodeKeys.setMinYElement(minYElement);
     }
 
     public double getMaxXElement() {
-        return maxXElement;
+        return this.nodeKeys.getMaxXElement();
     }
 
     public void setMaxXElement(double maxXElement) {
-        this.maxXElement = maxXElement;
+        this.nodeKeys.setMaxXElement(maxXElement);
     }
 
     public double getMaxYElement() {
-        return maxYElement;
+        return this.nodeKeys.getMaxYElement();
     }
 
     public void setMaxYElement(double maxYElement) {
-        this.maxYElement = maxYElement;
+        this.nodeKeys.setMaxYElement(maxYElement);
     }
 
     public QuadTreeNode<T>[] getSons() {
@@ -160,11 +164,15 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         return parent;
     }
 
-    public LinkedList<T> getIntersectingData() {
+    public LinkedList<QuadTreeNodeKeys<T>> getIntersectingData() {
         return intersectingData;
     }
 
     public int getLevel() {
         return level;
+    }
+
+    public QuadTreeNodeKeys<T> getNodeKeys() {
+        return nodeKeys;
     }
 }

@@ -1,16 +1,18 @@
-public class QuadTreeNodeKeys {
+public class QuadTreeNodeKeys<T extends Comparable<T>> {
     private int ID;
     private double minXElement;
     private double minYElement;
     private double maxXElement;
     private double maxYElement;
+    private T data;
 
-    public QuadTreeNodeKeys(int ID, double minXElement, double minYElement, double maxXElement, double maxYElement) {
+    public QuadTreeNodeKeys(int ID, double minXElement, double minYElement, double maxXElement, double maxYElement, T data) {
         this.ID = ID;
         this.minXElement = minXElement;
         this.minYElement = minYElement;
         this.maxXElement = maxXElement;
         this.maxYElement = maxYElement;
+        this.data = data;
     }
 
     public int getID() {
@@ -51,5 +53,13 @@ public class QuadTreeNodeKeys {
 
     public void setMaxYElement(double maxYElement) {
         this.maxYElement = maxYElement;
+    }
+
+    public T getData() {
+        return this.data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }
