@@ -73,15 +73,15 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         this.nodeKeys = new QuadTreeNodeKeys(p_id,p_minXElement,p_minYElement, p_maxXElement, p_maxYElement, data);
     }
 
-    public T removeData() {
-        T helpData = this.nodeKeys.getData();
+    public QuadTreeNodeKeys<T> removeData() {
+        QuadTreeNodeKeys<T> NodeKeys = this.nodeKeys;
 //        this.data = null;
 //        this.minXElement = 0;
 //        this.minYElement = 0;
 //        this.maxXElement = 0;
 //        this.maxYElement = 0;
         this.nodeKeys = null;
-        return helpData;
+        return NodeKeys;
     }
     
     public T getData() {
@@ -174,5 +174,9 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     public QuadTreeNodeKeys<T> getNodeKeys() {
         return nodeKeys;
+    }
+
+    public void setSons(QuadTreeNode<T>[] sons) {
+        this.sons = sons;
     }
 }
