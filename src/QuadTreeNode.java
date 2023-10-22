@@ -64,13 +64,14 @@ public class QuadTreeNode<T extends Comparable<T> >  {
         return xIntersectsHalfX || yIntersectsHalfY;
     }
 
-    public void insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, int p_id, T data) {
+    public QuadTreeNodeKeys<T> insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, int p_id, T data) {
 //        this.data = data;
 //        this.minXElement = p_minXElement;
 //        this.minYElement = p_minYElement;
 //        this.maxXElement = p_maxXElement;
 //        this.maxYElement = p_maxYElement;
         this.nodeKeys = new QuadTreeNodeKeys(p_id,p_minXElement,p_minYElement, p_maxXElement, p_maxYElement, data);
+        return this.nodeKeys;
     }
 
     public QuadTreeNodeKeys<T> removeData() {

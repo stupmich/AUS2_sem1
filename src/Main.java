@@ -7,6 +7,10 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
+        tree.insert(5,90,10,95,1);
+        tree.insert(30,70,35,80,2);
+        QuadTreeNodeKeys<Integer> dataFound = null;
+        dataFound = tree.delete(5,90,10,95,0);
 
 //        tree.insert(10,10,20,20,1);
 //        tree.insert(30,30,40,40,2);
@@ -15,20 +19,20 @@ public class Main {
 //        tree.insert(50,50,60,60,5);
 //        tree.insert(20,20,30,30,6);
 
-        tree.insert(20,70,25,80,1);
-        tree.insert(10,10,15,15,2);
-        tree.insert(30,10,30,15,3);
-//        tree.insert(30,30,40,40,4);
-        tree.insert(50,50,60,60,4);
-
-        ArrayList<Integer> al = new ArrayList<Integer>();
-        al  = tree.find(tree.getRoot(),0,0,100,100);
-
-        QuadTreeNodeKeys<Integer> dataFound = null;
-        dataFound = tree.delete(20,70,25,80,0);
+//        tree.insert(20,70,25,80,1);
+//        tree.insert(10,10,15,15,2);
+//        tree.insert(30,10,30,15,3);
+////        tree.insert(30,30,40,40,4);
+//        tree.insert(50,50,60,60,4);
+//
+//        ArrayList<Integer> al = new ArrayList<Integer>();
+//        al  = tree.find(tree.getRoot(),0,0,100,100);
+//
+//        QuadTreeNodeKeys<Integer> dataFound = null;
+//        dataFound = tree.delete(20,70,25,80,0);
 //        dataFound = tree.delete(10,10,15,15,1);
-        dataFound = tree.delete(50,50,60,60,3);
-        dataFound = tree.delete(10,10,15,15,1);
+//        dataFound = tree.delete(50,50,60,60,3);
+//        dataFound = tree.delete(10,10,15,15,1);
 
 //        tree.insert(0,0,2,2,1);
 //        tree.insert(1,1,2,2,2);
@@ -38,7 +42,7 @@ public class Main {
 
 
 
-//        TestQuadTree(100000,100,0,0,0,100,100,10);
+         TestQuadTree(1000,80,20,0,0,100,100,2);
     }
 
 
@@ -59,13 +63,17 @@ public class Main {
 
         QuadTree<Integer> tree = new QuadTree<Integer>(p_minX, p_minY, p_maxX, p_maxY, p_maxLevel);
 
+        QuadTreeNodeKeys<Integer> keys = null;
+
         ArrayList<Integer> added_numbers = new ArrayList<Integer>();
+        ArrayList<QuadTreeNodeKeys<Integer>> added_keys = new ArrayList<QuadTreeNodeKeys<Integer>>();
         ArrayList<Integer> tree_numbers = new ArrayList<Integer>();
         ArrayList<Integer> wrong_numbers = new ArrayList<Integer>();
 
         Random random = new Random();
         int seed = random.nextInt(100000);
-        random.setSeed(seed);
+        System.out.println(16404);
+        random.setSeed(16404);
 
 
         for (int i = 0; i < p_number_operations; i++) {
@@ -97,8 +105,10 @@ public class Main {
                         maxYElement = random.nextDouble(minYElement, p_minY + halfY);
                     }
 
-                    if (tree.insert(minXElement, minYElement, maxXElement, maxYElement, max_data)) {
-                        added_numbers.add(max_data);
+                    keys = tree.insert(minXElement, minYElement, maxXElement, maxYElement, max_data);
+                    if (keys != null ) {
+                        added_numbers.add(keys.getData());
+                        added_keys.add(keys);
                         max_data++;
                         n_insert++;
                     } else {
@@ -113,14 +123,16 @@ public class Main {
                     if (added_numbers.size() < 1) {
                         i--;
                     } else {
-//                        int index = random.nextInt(added_numbers.size());
-//                        random_numb_data = added_numbers.get(index);
-//                        if (testing_tree.delete(random_numb_data) != null){
-//                            n_delete++;
-//                            added_numbers.remove(index);
-//                        } else {
-//                            i--;
-//                        }
+                        int index = random.nextInt(added_keys.size());
+
+                        keys = added_keys.get(index);
+                        if (tree.delete(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getID()) != null){
+                            n_delete++;
+                            added_numbers.remove(index);
+                            added_keys.remove(index);
+                        } else {
+                            i--;
+                        }
                     }
                 } else {
                     i--;
