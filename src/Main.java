@@ -6,18 +6,23 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
-        tree.insert(5,90,10,95,1);
-        tree.insert(30,70,35,80,2);
-        QuadTreeNodeKeys<Integer> dataFound = null;
-        dataFound = tree.delete(5,90,10,95,0);
+        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 5);
 
-//        tree.insert(10,10,20,20,1);
-//        tree.insert(30,30,40,40,2);
-//        tree.insert(80,80,100,100,3);
-//        tree.insert(80,80,100,100,4);
-//        tree.insert(50,50,60,60,5);
-//        tree.insert(20,20,30,30,6);
+        tree.insert(tree.getRoot(),10,10,20,20,1);
+        tree.insert(tree.getRoot(),30,30,40,40,2);
+        tree.insert(tree.getRoot(),80,80,100,100,3);
+        tree.insert(tree.getRoot(),80,80,100,100,4);
+        tree.insert(tree.getRoot(),50,50,60,60,5);
+        tree.insert(tree.getRoot(),20,20,30,30,6);
+        tree.insert(tree.getRoot(),20,90,30,92,7);
+        tree.insert(tree.getRoot(),90,10,95,30,8);
+        tree.insert(tree.getRoot(),95,95,100,100,9);
+        tree.insert(tree.getRoot(),95,95,100,100,10);
+
+        tree.changeMaxHeight(2);
+
+        ArrayList<Integer> al = new ArrayList<Integer>();
+        al  = tree.find(tree.getRoot(),0,0,100,100);
 
 //        tree.insert(20,70,25,80,1);
 //        tree.insert(10,10,15,15,2);
@@ -25,8 +30,7 @@ public class Main {
 ////        tree.insert(30,30,40,40,4);
 //        tree.insert(50,50,60,60,4);
 //
-//        ArrayList<Integer> al = new ArrayList<Integer>();
-//        al  = tree.find(tree.getRoot(),0,0,100,100);
+
 //
 //        QuadTreeNodeKeys<Integer> dataFound = null;
 //        dataFound = tree.delete(20,70,25,80,0);
@@ -42,7 +46,7 @@ public class Main {
 
 
 
-         TestQuadTree(1000,80,20,0,0,100,100,2);
+//         TestQuadTree(10000,80,20,0,0,100,100,10);
     }
 
 
@@ -105,7 +109,7 @@ public class Main {
                         maxYElement = random.nextDouble(minYElement, p_minY + halfY);
                     }
 
-                    keys = tree.insert(minXElement, minYElement, maxXElement, maxYElement, max_data);
+                    keys = tree.insert(tree.getRoot(), minXElement, minYElement, maxXElement, maxYElement, max_data);
                     if (keys != null ) {
                         added_numbers.add(keys.getData());
                         added_keys.add(keys);
