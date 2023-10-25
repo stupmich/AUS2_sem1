@@ -65,6 +65,7 @@ public class QuadTree<T extends Comparable<T>>  {
                         help_node.getIntersectingData().add(new QuadTreeNodeKeys(helpData.getID(),helpMinXElement,helpMinYElement, helpMaxXElement, helpMaxYElement, helpData.getData()));
                         insertedKeys = new QuadTreeNodeKeys(currentMaxID,p_minXElement,p_minYElement, p_maxXElement, p_maxYElement, data);
                         help_node.getIntersectingData().add(insertedKeys);
+//                        help_node.setSons(null); //no need for sons, both are intersecting
                         currentMaxID++;
                         end = true;
                     }
@@ -144,13 +145,13 @@ public class QuadTree<T extends Comparable<T>>  {
         return insertedKeys;
     }
 
-    public ArrayList<T> find(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
+    public ArrayList<QuadTreeNodeKeys<T>> find(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
         if (!(p_minXToFind >= minX && p_maxXToFind <= maxX && p_minYToFind >= minY && p_maxYToFind <= maxY)){
             return null;
             //TODO EXCEPTION
         }
 
-        ArrayList<T> data = new ArrayList<T>();
+        ArrayList<QuadTreeNodeKeys<T>> data = new ArrayList<QuadTreeNodeKeys<T>>();
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
         QuadTreeNode<T> helpNode = new QuadTreeNode<T>(p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind,0, null);
 
@@ -167,13 +168,13 @@ public class QuadTree<T extends Comparable<T>>  {
                     currentNode.getData() != null &&
                         helpNode.contains(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()))
             {
-                data.add(currentNode.getData());
+                data.add(currentNode.getNodeKeys());
             }
 
             for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
             {
                 if (helpNode.contains(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
-                    data.add(key.getData());
+                    data.add(key);
                 }
 
             }
@@ -284,94 +285,159 @@ public class QuadTree<T extends Comparable<T>>  {
         return dataFound;
     }
 
-    public void changeMaxHeight(int p_max_height) {
-        int helpMaxHeight = this.maxLevel;
-        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
-        QuadTreeNodeKeys<T> helpKeys = null;
-        QuadTreeNode<T> nodeOnNewLevel = null;
-
-
-        this.maxLevel = p_max_height;
+    public void changeMaxHeight(int p_new_max_height) {
+        int currentMaxHeight = this.maxLevel;
+        this.maxLevel = p_new_max_height;
+        Stack<QuadTreeNode<T>> stack = new Stack<>();
         stack.push(this.root);
 
-        if (helpMaxHeight < p_max_height) {
-
+        if (currentMaxHeight < p_new_max_height) {
             while (!stack.isEmpty()) {
                 QuadTreeNode<T> currentNode = stack.pop();
 
-                if (currentNode.getLevel() == helpMaxHeight &&
-                        currentNode.getIntersectingData().size() != 0)
-                {
+                if (currentNode.getLevel() == currentMaxHeight && !currentNode.getIntersectingData().isEmpty()) { // data that are supposed to be lower
+                    LinkedList<QuadTreeNodeKeys<T>> keysToRemove = new LinkedList<>();
 
-                    for (int i = 0; i < currentNode.getIntersectingData().size() ; i++) {
-                        this.insert(currentNode, currentNode.getIntersectingData().get(i).getMinXElement(), currentNode.getIntersectingData().get(i).getMinYElement(),
-                                    currentNode.getIntersectingData().get(i).getMaxXElement(), currentNode.getIntersectingData().get(i).getMaxYElement(),
-                                    currentNode.getIntersectingData().get(i).getData());
-                        currentNode.getIntersectingData().remove(i);
-                    }
-
-                    LinkedList<QuadTreeNodeKeys<T>> helpIntersectingData = new LinkedList<QuadTreeNodeKeys<T>>();
-
-                    for (QuadTreeNodeKeys<T> keys : currentNode.getIntersectingData() ) {
-                        if (!currentNode.intersectsInnerLines(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement()))
-                        {
-                            helpIntersectingData.add(keys);
-                            this.insert(currentNode, keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(),keys.getData());
+                    for (QuadTreeNodeKeys<T> keys : currentNode.getIntersectingData()) { // go through intersecting data, if intersects boundaries in next node leave it in list, else insert lower
+                        if (!currentNode.intersectsInnerLines(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement())) {
+                            this.insert(currentNode, keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
+                            keysToRemove.add(keys);
                         }
                     }
-                    currentNode.getIntersectingData().removeAll(helpIntersectingData);
 
+                    currentNode.getIntersectingData().removeAll(keysToRemove); // remove data that was inserted
                 }
 
-                if (currentNode != null && currentNode.getSons() != null) {
-                    for (int i = 0; i < 4; i++) { // go through sons of node
+                if (currentNode.getSons() != null) {
+                    for (int i = 0; i < 4; i++) {
                         stack.push(currentNode.getSons()[i]);
                     }
                 }
             }
-
-        } else if (helpMaxHeight > p_max_height) {
-
+        } else if (currentMaxHeight > p_new_max_height) {
             while (!stack.isEmpty()) {
                 QuadTreeNode<T> currentNode = stack.pop();
-                LinkedList<QuadTreeNodeKeys<T>> keys_list = new LinkedList<QuadTreeNodeKeys<T>>();
+                LinkedList<QuadTreeNodeKeys<T>> keysList = new LinkedList<>();
 
-                if (currentNode != null && currentNode.getSons() != null) {
-                    for (int i = 0; i < 4; i++) { // go through sons of node
+                if (currentNode.getSons() != null) { //get sons before, later will set them as null
+                    for (int i = 0; i < 4; i++) {
                         stack.push(currentNode.getSons()[i]);
                     }
                 }
 
-                if (currentNode.getLevel() > p_max_height )
-                {
+                if (currentNode.getLevel() > p_new_max_height) {
                     if (currentNode.getNodeKeys() != null) {
-                        keys_list.add(currentNode.getNodeKeys());
+                        keysList.add(currentNode.getNodeKeys()); // get data from node
                     }
 
-                    for (QuadTreeNodeKeys<T> keys : currentNode.getIntersectingData() ) {
-                        keys_list.add(keys);
-                    }
+                    keysList.addAll(currentNode.getIntersectingData()); // get intersecting data
 
-                    if (keys_list.size() != 0) {
-                        nodeOnNewLevel = currentNode;
+                    if (!keysList.isEmpty()) {
+                        QuadTreeNode<T> nodeOnNewHeight = findNodeOnNewHeight(currentNode, p_new_max_height); // go up in tree to the new max height
 
-                        while(nodeOnNewLevel.getLevel() != p_max_height) {
-                            nodeOnNewLevel = nodeOnNewLevel.getParent();
-                        }
-
-                        if (nodeOnNewLevel != null ) {
-                            if (nodeOnNewLevel.getNodeKeys() == null) {
-                                helpKeys = keys_list.removeFirst();
-                                nodeOnNewLevel.insertData(helpKeys.getMinXElement(),helpKeys.getMinYElement(),helpKeys.getMaxXElement(),helpKeys.getMaxYElement(),helpKeys.getID(),helpKeys.getData());
+                        if (nodeOnNewHeight != null) {
+                            if (nodeOnNewHeight.getNodeKeys() == null) { // if there is no data insert data from son
+                                QuadTreeNodeKeys<T> helpKeys = keysList.removeFirst();
+                                nodeOnNewHeight.insertData(helpKeys.getMinXElement(), helpKeys.getMinYElement(), helpKeys.getMaxXElement(), helpKeys.getMaxYElement(), helpKeys.getID(), helpKeys.getData());
                             }
-                            nodeOnNewLevel.getIntersectingData().addAll(keys_list);
+                            nodeOnNewHeight.getIntersectingData().addAll(keysList); // add other data to list
                         }
                     }
-                    currentNode.getParent().setSons(null);
+                    currentNode.getParent().setSons(null); // delete reference to next nodes
                 }
             }
-
         }
+    }
+
+    private QuadTreeNode<T> findNodeOnNewHeight(QuadTreeNode<T> node, int newMaxHeight) {
+        QuadTreeNode<T> nodeOnNewHeight = node;
+
+        while (nodeOnNewHeight.getLevel() != newMaxHeight) {
+            nodeOnNewHeight = nodeOnNewHeight.getParent();
+        }
+
+        return nodeOnNewHeight;
+    }
+
+    public void optimizeTree() {
+        ArrayList<QuadTreeNodeKeys<T>> tree_keys = new ArrayList<QuadTreeNodeKeys<T>>();
+        ArrayList<QuadTreeNodeKeys<T>> new_tree_keys = new ArrayList<QuadTreeNodeKeys<T>>();
+        ArrayList<QuadTreeNodeKeys<T>> intersectingDataNew = new ArrayList<QuadTreeNodeKeys<T>>();
+        ArrayList<QuadTreeNodeKeys<T>> intersectingDataCurrent = new ArrayList<QuadTreeNodeKeys<T>>();
+
+        double x10percent = (this.maxX - this.minX) * 0.2;
+        double y10percent = (this.maxY - this.minY) * 0.2;
+        int bestNumberOfIntersectingData = Integer.MAX_VALUE;
+
+//        double min_max_X = Double.MIN_VALUE;
+//        double max_min_X = Double.MAX_VALUE;
+//        double min_max_Y = Double.MIN_VALUE;
+//        double max_min_Y = Double.MAX_VALUE;
+//
+//        for (QuadTreeNodeKeys<T> keys : tree_keys ) {
+//            if (keys.getMaxXElement() > min_max_X) {
+//                min_max_X = keys.getMaxXElement();
+//            }
+//            if (keys.getMaxYElement() > min_max_Y) {
+//                min_max_Y = keys.getMaxYElement();
+//            }
+//
+//            if (keys.getMinXElement() < max_min_X) {
+//                max_min_X = keys.getMinXElement();
+//            }
+//            if (keys.getMinYElement() < max_min_Y) {
+//                max_min_Y = keys.getMinYElement();
+//            }
+//        }
+
+        tree_keys = this.find(this.root,this.minX,this.minY, this.maxX,this.maxY);
+        intersectingDataCurrent = this.findAllIntersectingData(this);
+
+        for (double xChange = -1.0 * x10percent; xChange <= 1.0 * x10percent; xChange++) {
+            for (double yChange = -1.0 * y10percent; yChange <= 1.0 * y10percent; yChange++) {
+                QuadTree<T> tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
+
+                for (QuadTreeNodeKeys<T> keys : tree_keys ) {
+
+                    tree.insert(tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
+                }
+
+                new_tree_keys = tree.find(tree.getRoot(),tree.minX, tree.minY, tree.maxX, tree.maxY);
+                if (new_tree_keys.size() == tree_keys.size()) {
+                    intersectingDataNew = this.findAllIntersectingData(tree);
+
+                    if (intersectingDataNew.size() < intersectingDataCurrent.size() && intersectingDataNew.size() < bestNumberOfIntersectingData) {
+                        bestNumberOfIntersectingData = intersectingDataNew.size();
+                        System.out.println(":_)");
+                    }
+                }
+            }
+        }
+    }
+
+    public ArrayList<QuadTreeNodeKeys<T>> findAllIntersectingData(QuadTree<T> p_tree) {
+        ArrayList<QuadTreeNodeKeys<T>> intersectingData = new ArrayList<QuadTreeNodeKeys<T>>();
+        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
+
+        if (p_tree.getRoot() == null || p_tree== null) {
+            return null;
+        }
+
+        stack.push(p_tree.getRoot());
+
+        while (!stack.isEmpty()) {
+            QuadTreeNode<T> currentNode = stack.pop();
+
+            intersectingData.addAll(currentNode.getIntersectingData());
+
+            if (currentNode != null && currentNode.getSons() != null) {
+                for (int i = 0; i < 4; i++) { // go through sons of node
+                    stack.push(currentNode.getSons()[i]);
+                }
+            }
+        }
+
+        return intersectingData;
     }
 
     public QuadTreeNode<T> getRoot() {
