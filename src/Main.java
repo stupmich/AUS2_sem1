@@ -1,3 +1,5 @@
+import GUI.GeodetSystemGUI;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +8,13 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
+        GeodetSystemGUI gui = new GeodetSystemGUI();
+
         QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
+
+//        QuadTree<Nehnutelnost> tree1 = new QuadTree<Nehnutelnost>(0,0,100,100, 10);
+//        Nehnutelnost n = new Nehnutelnost(1,"ss",null, null, null);
+//        tree1.insert(tree1.getRoot(),10,10,20,20,n);
 
 //        tree.insert(tree.getRoot(),10,10,20,20,1);
 //        tree.insert(tree.getRoot(),30,30,40,40,2);

@@ -391,20 +391,20 @@ public class QuadTree<T extends Comparable<T>>  {
 //        }
 
         tree_keys = this.find(this.root,this.minX,this.minY, this.maxX,this.maxY);
-        intersectingDataCurrent = this.findAllIntersectingData(this);
+        intersectingDataCurrent = this.findAllIntersectingData();
 
         for (double xChange = -1.0 * x10percent; xChange <= 1.0 * x10percent; xChange++) {
             for (double yChange = -1.0 * y10percent; yChange <= 1.0 * y10percent; yChange++) {
-                QuadTree<T> tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
+                QuadTree<T> optimized_tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
 
                 for (QuadTreeNodeKeys<T> keys : tree_keys ) {
 
-                    tree.insert(tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
+                    optimized_tree.insert(optimized_tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
                 }
 
-                new_tree_keys = tree.find(tree.getRoot(),tree.minX, tree.minY, tree.maxX, tree.maxY);
+                new_tree_keys = optimized_tree.find(optimized_tree.getRoot(),optimized_tree.minX, optimized_tree.minY, optimized_tree.maxX, optimized_tree.maxY);
                 if (new_tree_keys.size() == tree_keys.size()) {
-                    intersectingDataNew = this.findAllIntersectingData(tree);
+                    intersectingDataNew = optimized_tree.findAllIntersectingData();
 
                     if (intersectingDataNew.size() < intersectingDataCurrent.size() && intersectingDataNew.size() < bestNumberOfIntersectingData) {
                         bestNumberOfIntersectingData = intersectingDataNew.size();
@@ -415,15 +415,15 @@ public class QuadTree<T extends Comparable<T>>  {
         }
     }
 
-    public ArrayList<QuadTreeNodeKeys<T>> findAllIntersectingData(QuadTree<T> p_tree) {
+    public ArrayList<QuadTreeNodeKeys<T>> findAllIntersectingData() {
         ArrayList<QuadTreeNodeKeys<T>> intersectingData = new ArrayList<QuadTreeNodeKeys<T>>();
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
 
-        if (p_tree.getRoot() == null || p_tree== null) {
+        if (this.getRoot() == null || this == null) {
             return null;
         }
 
-        stack.push(p_tree.getRoot());
+        stack.push(this.getRoot());
 
         while (!stack.isEmpty()) {
             QuadTreeNode<T> currentNode = stack.pop();
@@ -438,6 +438,15 @@ public class QuadTree<T extends Comparable<T>>  {
         }
 
         return intersectingData;
+    }
+
+    public double evaluateHealth(QuadTree<T> p_tree) {
+        ArrayList<QuadTreeNodeKeys<T>> intersectingDataOptimized = p_tree.findAllIntersectingData();
+        ArrayList<QuadTreeNodeKeys<T>> intersectingDataCurrent = this.findAllIntersectingData();
+
+        double health = ((double)intersectingDataOptimized.size() / intersectingDataCurrent.size());
+
+        return health;
     }
 
     public QuadTreeNode<T> getRoot() {
