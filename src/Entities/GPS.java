@@ -44,4 +44,12 @@ public class GPS {
     public void setPositionX(double positionX) {
         this.positionX = positionX;
     }
+
+    @Override
+    public String toString() {
+        return "Width=" + y +
+                " " + positionY +
+                ", Length=" + x +
+                " " + positionX;
+    }
 }

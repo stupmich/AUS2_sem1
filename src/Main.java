@@ -4,13 +4,19 @@ import Structures.QuadTreeNodeKeys;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         GeodetSystemGUI gui = new GeodetSystemGUI();
 
-        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
+//        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
+
+//        tree.insert(tree.getRoot(),10,10,20,20,1);
+//        tree.insert(tree.getRoot(),40,40,60,60,2);
+//
+//        ArrayList<QuadTreeNodeKeys<Integer>> al = tree.findContainedOrIntersecting(tree.getRoot(),0,0,50,50);
 
 //        Structures.QuadTree<Entities.Nehnutelnost> tree1 = new Structures.QuadTree<Entities.Nehnutelnost>(0,0,100,100, 10);
 //        Entities.Nehnutelnost n = new Entities.Nehnutelnost(1,"ss",null, null, null);
@@ -27,26 +33,26 @@ public class Main {
 //        tree.insert(tree.getRoot(),99,99,100,100,9);
 //        tree.insert(tree.getRoot(),99,99,100,100,10);
 
-        tree.insert(tree.getRoot(),10,10,12,12,1);
-        tree.insert(tree.getRoot(),30,30,32,32,2);
-        tree.insert(tree.getRoot(),80,80,82,82,3);
-        tree.insert(tree.getRoot(),80,80,82,82,4);
-        tree.insert(tree.getRoot(),50,50,52,52,5);
-        tree.insert(tree.getRoot(),20,20,21,21,6);
-        tree.insert(tree.getRoot(),20,90,25,92,7);
-        tree.insert(tree.getRoot(),90,10,95,12,8);
-        tree.insert(tree.getRoot(),99,99,100,100,9);
-        tree.insert(tree.getRoot(),99,99,100,100,10);
-        tree.insert(tree.getRoot(),25,25,26,26,6);
+//        tree.insert(tree.getRoot(),10,10,12,12,1);
+//        tree.insert(tree.getRoot(),30,30,32,32,2);
+//        tree.insert(tree.getRoot(),80,80,82,82,3);
+//        tree.insert(tree.getRoot(),80,80,82,82,4);
+//        tree.insert(tree.getRoot(),50,50,52,52,5);
+//        tree.insert(tree.getRoot(),20,20,21,21,6);
+//        tree.insert(tree.getRoot(),20,90,25,92,7);
+//        tree.insert(tree.getRoot(),90,10,95,12,8);
+//        tree.insert(tree.getRoot(),99,99,100,100,9);
+//        tree.insert(tree.getRoot(),99,99,100,100,10);
+//        tree.insert(tree.getRoot(),25,25,26,26,6);
 
 //        tree.changeMaxHeight(10);
 
-        ArrayList<QuadTreeNodeKeys<Integer>> al = new ArrayList<QuadTreeNodeKeys<Integer>>();
-        al  = tree.find(tree.getRoot(),0,0,100,100);
-
-        tree.optimizeTree();
-
-        System.out.println(":)");
+//        ArrayList<QuadTreeNodeKeys<Integer>> al = new ArrayList<QuadTreeNodeKeys<Integer>>();
+//        al  = tree.find(tree.getRoot(),0,0,100,100);
+//
+//        tree.optimizeTree();
+//
+//        System.out.println(":)");
 //        tree.insert(20,70,25,80,1);
 //        tree.insert(10,10,15,15,2);
 //        tree.insert(30,10,30,15,3);
@@ -95,7 +101,7 @@ public class Main {
         ArrayList<Integer> added_numbers = new ArrayList<Integer>();
         ArrayList<QuadTreeNodeKeys<Integer>> added_keys = new ArrayList<QuadTreeNodeKeys<Integer>>();
         ArrayList<Integer> tree_numbers = new ArrayList<Integer>();
-        ArrayList<QuadTreeNodeKeys<Integer>> tree_keys = new ArrayList<QuadTreeNodeKeys<Integer>>();
+        LinkedList<QuadTreeNodeKeys<Integer>> tree_keys = new LinkedList<QuadTreeNodeKeys<Integer>>();
         ArrayList<Integer> wrong_numbers = new ArrayList<Integer>();
 
         Random random = new Random();

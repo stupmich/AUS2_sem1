@@ -1,8 +1,16 @@
 package GUI;
 
-import javax.swing.*;
+import App.SystemApp;
+import Entities.Nehnutelnost;
+import Entities.Parcela;
 
-public class GeodetSystemGUI extends JFrame {
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
+public class GeodetSystemGUI extends JFrame implements ActionListener {
 
     private JPanel mainPanel;
     private JTabbedPane tabbedPane1;
@@ -14,9 +22,15 @@ public class GeodetSystemGUI extends JFrame {
     private JTextField lengthCharSearchNehnutelnost;
     private JTextField popisInsertNehnutelnost;
     private JTable table1;
+    private JTable listSearchNehnutelnost;
     private JTable table2;
-    private JTable table3;
     private JTable table4;
+    private JTable listSearchAllNehnutelnost;
+    private DefaultTableModel nehnutelnostTableModel;
+    private DefaultTableModel nehnutelnostAllTableModel;
+    private DefaultTableModel nehnutelnostInsertTableModel;
+    private DefaultTableModel parcelaTableModel;
+
     private JTextField tree_minX;
     private JTextField tree_minY;
     private JTextField tree_maxDepth;
@@ -42,8 +56,8 @@ public class GeodetSystemGUI extends JFrame {
     private JTextField widthPositionSearchParcela;
     private JTextField minWidthCharSearchObjekt;
     private JTextField minLengthCharSearchObjekt;
-    private JTextField lengthPositionSearchObjekt;
-    private JTextField widthPositionSearchObjekt;
+    private JTextField minLengthPositionSearchObjekt;
+    private JTextField minWidthPositionSearchObjekt;
     private JTextField maxWidthCharSearchObjekt;
     private JTextField maxLengthCharSearchObjekt;
     private JTextField maxWidthPositionSearchObjekt;
@@ -57,6 +71,16 @@ public class GeodetSystemGUI extends JFrame {
     private JTextField maxLengthCharInsertNehnutelnost;
     private JTextField maxWidthPositionInsertNehnutelnost;
     private JTextField maxLengthPositionInsertNehnutelnost;
+    private JButton fillSystemButton;
+    private JButton searchNehnutelnostiButton;
+    private JButton searchParcelyButton;
+    private JButton searchObjectsButton;
+    private JTable listSearchAllParcela;
+    private JButton insertNehnutelnostButton;
+    private JTable listNehnutelnostInsert;
+
+
+    private SystemApp app;
 
     public GeodetSystemGUI(){
         this.setContentPane(mainPanel);
@@ -64,5 +88,94 @@ public class GeodetSystemGUI extends JFrame {
         this.setSize(1920,1080);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.app = new SystemApp();
+
+        nehnutelnostTableModel = new DefaultTableModel();
+        nehnutelnostTableModel.addColumn("Cislo");
+        nehnutelnostTableModel.addColumn("Popis");
+        nehnutelnostTableModel.addColumn("GPS1");
+        nehnutelnostTableModel.addColumn("GPSľ");
+        listSearchNehnutelnost.setModel(nehnutelnostTableModel);
+
+        nehnutelnostAllTableModel = new DefaultTableModel();
+        nehnutelnostAllTableModel.addColumn("Cislo");
+        nehnutelnostAllTableModel.addColumn("Popis");
+        nehnutelnostAllTableModel.addColumn("GPS1");
+        nehnutelnostAllTableModel.addColumn("GPSľ");
+        listSearchAllNehnutelnost.setModel(nehnutelnostAllTableModel);
+
+        nehnutelnostInsertTableModel = new DefaultTableModel();
+        nehnutelnostInsertTableModel.addColumn("Cislo");
+        nehnutelnostInsertTableModel.addColumn("Popis");
+        nehnutelnostInsertTableModel.addColumn("GPS1");
+        nehnutelnostInsertTableModel.addColumn("GPSľ");
+        listNehnutelnostInsert.setModel(nehnutelnostInsertTableModel);
+
+        parcelaTableModel = new DefaultTableModel();
+        parcelaTableModel.addColumn("Cislo");
+        parcelaTableModel.addColumn("Popis");
+        parcelaTableModel.addColumn("GPS1");
+        parcelaTableModel.addColumn("GPSľ");
+        listSearchAllParcela.setModel(parcelaTableModel);
+
+        fillSystemButton.addActionListener(this);
+        searchNehnutelnostiButton.addActionListener(this);
+        searchObjectsButton.addActionListener(this);
+        insertNehnutelnostButton.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == fillSystemButton) {
+            this.app.fillSystem( Double.parseDouble(tree_minX.getText()), Double.parseDouble(tree_minY.getText()),
+                                 Double.parseDouble(tree_maxX.getText()), Double.parseDouble(tree_maxY.getText()), Integer.parseInt(tree_maxDepth.getText()),
+                                 Integer.parseInt(numberNehnutelnost.getText()), Integer.parseInt(numberParcela.getText()),
+                                 Double.parseDouble(minWidthNehnutelnost.getText()), Double.parseDouble(minLengthNehnutelnost.getText()),
+                                 Double.parseDouble(maxWidthNehnutelnost.getText()), Double.parseDouble(maxLengthNutelnost.getText()),
+                                 Double.parseDouble(minWidthParcela.getText()), Double.parseDouble(minLengthParcela.getText()),
+                                 Double.parseDouble(maxWidthParcela.getText()), Double.parseDouble(maxLengthParcela.getText()));
+
+        } else if (e.getSource() == searchNehnutelnostiButton) {
+            LinkedList<Nehnutelnost> nehnutelnosti = this.app.searchNehnutelnost(widthCharSearchNehnutelnost.getText().toCharArray()[0], Double.parseDouble(widthPositionSearchNehnutelnost.getText()) ,
+                                                                                    lengthCharSearchNehnutelnost.getText().toCharArray()[0], Double.parseDouble(lengthPositionSearchNehnutelnost.getText()));
+
+            nehnutelnostTableModel.setRowCount(0);
+            for (Nehnutelnost nehnutelnost : nehnutelnosti) {
+                nehnutelnostTableModel.addRow(new Object[]{ nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
+            }
+
+        } else if (e.getSource() == searchObjectsButton) {
+            LinkedList<Nehnutelnost> nehnutelnosti = this.app.searchNehnutelnostArea(minWidthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(minWidthPositionSearchObjekt.getText()),
+                                                                                     minLengthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(minLengthPositionSearchObjekt.getText()),
+                                                                                     maxWidthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(maxWidthPositionSearchObjekt.getText()),
+                                                                                     maxLengthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(maxLengthPositionSearchObjekt.getText())
+            );
+
+            LinkedList<Parcela> parcely = this.app.searchParcelaArea(minWidthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(minWidthPositionSearchObjekt.getText()),
+                                                                     minLengthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(minLengthPositionSearchObjekt.getText()),
+                                                                     maxWidthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(maxWidthPositionSearchObjekt.getText()),
+                                                                     maxLengthCharSearchObjekt.getText().toCharArray()[0], Double.parseDouble(maxLengthPositionSearchObjekt.getText())
+            );
+
+            nehnutelnostAllTableModel.setRowCount(0);
+            for (Nehnutelnost nehnutelnost : nehnutelnosti) {
+                nehnutelnostAllTableModel.addRow(new Object[]{ nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
+            }
+
+            parcelaTableModel.setRowCount(0);
+            for (Parcela parcela : parcely) {
+                parcelaTableModel.addRow(new Object[]{ parcela.getSupisneCislo(), parcela.getPopis(), parcela.getMinGPS().toString(), parcela.getMaxGPS().toString()});
+            }
+
+        } else if (e.getSource() == insertNehnutelnostButton) {
+            Nehnutelnost nehnutelnost = app.insertNehnutelnost( minWidthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(minWidthPositionInsertNehnutelnost.getText()),
+                                                                minLengthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(minLengthPositionInsertNehnutelnost.getText()),
+                                                                maxWidthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(maxWidthPositionInsertNehnutelnost.getText()),
+                                                                maxLengthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(maxLengthPositionInsertNehnutelnost.getText()),
+                                                                Integer.parseInt(supisneCisloInsertNehnutelnost.getText()), popisInsertNehnutelnost.getText());
+
+            nehnutelnostInsertTableModel.addRow(new Object[]{ nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
+        }
     }
 }

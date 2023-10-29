@@ -8,11 +8,6 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     private double maxXBoundary;
     private double maxYBoundary;
 
-//    private double minXElement;
-//    private double minYElement;
-//    private double maxXElement;
-//    private double maxYElement;
-
     private QuadTreeNodeKeys<T> nodeKeys;
 
     private int level;
@@ -21,7 +16,6 @@ public class QuadTreeNode<T extends Comparable<T> >  {
 
     private QuadTreeNode<T>[] sons;
 
-//    private T data;
     private LinkedList<QuadTreeNodeKeys<T>> intersectingData;
 
     public QuadTreeNode(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary, int p_level, QuadTreeNode<T> parent) {
@@ -66,22 +60,12 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     }
 
     public QuadTreeNodeKeys<T> insertData(double p_minXElement, double p_minYElement, double p_maxXElement, double p_maxYElement, int p_id, T data) {
-//        this.data = data;
-//        this.minXElement = p_minXElement;
-//        this.minYElement = p_minYElement;
-//        this.maxXElement = p_maxXElement;
-//        this.maxYElement = p_maxYElement;
         this.nodeKeys = new QuadTreeNodeKeys(p_id,p_minXElement,p_minYElement, p_maxXElement, p_maxYElement, data);
         return this.nodeKeys;
     }
 
     public QuadTreeNodeKeys<T> removeData() {
         QuadTreeNodeKeys<T> NodeKeys = this.nodeKeys;
-//        this.data = null;
-//        this.minXElement = 0;
-//        this.minYElement = 0;
-//        this.maxXElement = 0;
-//        this.maxYElement = 0;
         this.nodeKeys = null;
         return NodeKeys;
     }

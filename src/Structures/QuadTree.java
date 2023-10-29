@@ -1,6 +1,6 @@
 package Structures;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -146,13 +146,13 @@ public class QuadTree<T extends Comparable<T>>  {
         return insertedKeys;
     }
 
-    public ArrayList<QuadTreeNodeKeys<T>> find(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
+    public LinkedList<QuadTreeNodeKeys<T>> find(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
         if (!(p_minXToFind >= minX && p_maxXToFind <= maxX && p_minYToFind >= minY && p_maxYToFind <= maxY)){
             return null;
             //TODO EXCEPTION
         }
 
-        ArrayList<QuadTreeNodeKeys<T>> data = new ArrayList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> data = new LinkedList<QuadTreeNodeKeys<T>>();
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
         QuadTreeNode<T> helpNode = new QuadTreeNode<T>(p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind,0, null);
 
@@ -175,6 +175,54 @@ public class QuadTree<T extends Comparable<T>>  {
             for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
             {
                 if (helpNode.contains(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
+                    data.add(key);
+                }
+
+            }
+
+            if (currentNode != null && currentNode.getSons() != null) {
+                for (int i = 0; i < 4; i++) { // go through sons of node
+                    stack.push(currentNode.getSons()[i]); //TODO possible rework go only  through sons that at least intersect the area we search for
+                }
+            }
+        }
+
+        return data;
+    }
+
+    public LinkedList<QuadTreeNodeKeys<T>> findContainedOrIntersecting(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
+        if (!(p_minXToFind >= minX && p_maxXToFind <= maxX && p_minYToFind >= minY && p_maxYToFind <= maxY)){
+            return null;
+            //TODO EXCEPTION
+        }
+
+        LinkedList<QuadTreeNodeKeys<T>> data = new LinkedList<QuadTreeNodeKeys<T>>();
+        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
+        QuadTreeNode<T> helpNode = new QuadTreeNode<T>(p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind,0, null);
+
+        if (p_node == null) {
+            return null;
+        }
+
+        stack.push(p_node);
+
+        while (!stack.isEmpty()) {
+            QuadTreeNode<T> currentNode = stack.pop();
+
+            if ( currentNode.getNodeKeys() != null &&
+                    currentNode.getData() != null &&
+                    (helpNode.contains(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()) ||
+                    helpNode.intersects(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()))
+            )
+
+            {
+                data.add(currentNode.getNodeKeys());
+            }
+
+            for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
+            {
+                if (helpNode.contains(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement()) ||
+                    helpNode.intersects(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
                     data.add(key);
                 }
 
@@ -361,10 +409,10 @@ public class QuadTree<T extends Comparable<T>>  {
     }
 
     public void optimizeTree() {
-        ArrayList<QuadTreeNodeKeys<T>> tree_keys = new ArrayList<QuadTreeNodeKeys<T>>();
-        ArrayList<QuadTreeNodeKeys<T>> new_tree_keys = new ArrayList<QuadTreeNodeKeys<T>>();
-        ArrayList<QuadTreeNodeKeys<T>> intersectingDataNew = new ArrayList<QuadTreeNodeKeys<T>>();
-        ArrayList<QuadTreeNodeKeys<T>> intersectingDataCurrent = new ArrayList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> new_tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> intersectingDataNew = new LinkedList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> intersectingDataCurrent = new LinkedList<QuadTreeNodeKeys<T>>();
 
         double x10percent = (this.maxX - this.minX) * 0.2;
         double y10percent = (this.maxY - this.minY) * 0.2;
@@ -416,8 +464,8 @@ public class QuadTree<T extends Comparable<T>>  {
         }
     }
 
-    public ArrayList<QuadTreeNodeKeys<T>> findAllIntersectingData() {
-        ArrayList<QuadTreeNodeKeys<T>> intersectingData = new ArrayList<QuadTreeNodeKeys<T>>();
+    private LinkedList<QuadTreeNodeKeys<T>> findAllIntersectingData() {
+        LinkedList<QuadTreeNodeKeys<T>> intersectingData = new LinkedList<QuadTreeNodeKeys<T>>();
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
 
         if (this.getRoot() == null || this == null) {
@@ -442,8 +490,8 @@ public class QuadTree<T extends Comparable<T>>  {
     }
 
     public double evaluateHealth(QuadTree<T> p_tree) {
-        ArrayList<QuadTreeNodeKeys<T>> intersectingDataOptimized = p_tree.findAllIntersectingData();
-        ArrayList<QuadTreeNodeKeys<T>> intersectingDataCurrent = this.findAllIntersectingData();
+        LinkedList<QuadTreeNodeKeys<T>> intersectingDataOptimized = p_tree.findAllIntersectingData();
+        LinkedList<QuadTreeNodeKeys<T>> intersectingDataCurrent = this.findAllIntersectingData();
 
         double health = ((double)intersectingDataOptimized.size() / intersectingDataCurrent.size());
 
