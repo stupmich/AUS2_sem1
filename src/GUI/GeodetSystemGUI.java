@@ -12,7 +12,7 @@ public class GeodetSystemGUI extends JFrame {
     private JTabbedPane tabbedPane5;
     private JTextField widthCharSearchNehnutelnost;
     private JTextField lengthCharSearchNehnutelnost;
-    private JTextField textFieldWorkers1;
+    private JTextField popisInsertNehnutelnost;
     private JTable table1;
     private JTable table2;
     private JTable table3;
@@ -37,6 +37,26 @@ public class GeodetSystemGUI extends JFrame {
     private JTextField lengthPositionSearchNehnutelnost;
     private JTextField widthPositionSearchNehnutelnost;
     private JTextField widthCharSearchParcela;
+    private JTextField lengthCharSearchParcela;
+    private JTextField lengthPositionSearchParcela;
+    private JTextField widthPositionSearchParcela;
+    private JTextField minWidthCharSearchObjekt;
+    private JTextField minLengthCharSearchObjekt;
+    private JTextField lengthPositionSearchObjekt;
+    private JTextField widthPositionSearchObjekt;
+    private JTextField maxWidthCharSearchObjekt;
+    private JTextField maxLengthCharSearchObjekt;
+    private JTextField maxWidthPositionSearchObjekt;
+    private JTextField maxLengthPositionSearchObjekt;
+    private JTextField supisneCisloInsertNehnutelnost;
+    private JTextField minWidthCharInsertNehnutelnost;
+    private JTextField minWidthPositionInsertNehnutelnost;
+    private JTextField minLengthPositionInsertNehnutelnost;
+    private JTextField minLengthCharInsertNehnutelnost;
+    private JTextField maxWidthCharInsertNehnutelnost;
+    private JTextField maxLengthCharInsertNehnutelnost;
+    private JTextField maxWidthPositionInsertNehnutelnost;
+    private JTextField maxLengthPositionInsertNehnutelnost;
 
     public GeodetSystemGUI(){
         this.setContentPane(mainPanel);
