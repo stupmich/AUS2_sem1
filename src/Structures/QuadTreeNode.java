@@ -1,4 +1,5 @@
-import java.awt.*;
+package Structures;
+
 import java.util.LinkedList;
 
 public class QuadTreeNode<T extends Comparable<T> >  {

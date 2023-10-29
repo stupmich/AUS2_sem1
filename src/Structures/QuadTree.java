@@ -1,5 +1,6 @@
+package Structures;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -374,7 +375,7 @@ public class QuadTree<T extends Comparable<T>>  {
 //        double min_max_Y = Double.MIN_VALUE;
 //        double max_min_Y = Double.MAX_VALUE;
 //
-//        for (QuadTreeNodeKeys<T> keys : tree_keys ) {
+//        for (Structures.QuadTreeNodeKeys<T> keys : tree_keys ) {
 //            if (keys.getMaxXElement() > min_max_X) {
 //                min_max_X = keys.getMaxXElement();
 //            }

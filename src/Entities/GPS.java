@@ -1,3 +1,5 @@
+package Entities;
+
 public class GPS {
     private char y;
     private double positionY;

@@ -1,9 +1,9 @@
 import GUI.GeodetSystemGUI;
+import Structures.QuadTree;
+import Structures.QuadTreeNodeKeys;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Random;
 
 public class Main {
@@ -12,8 +12,8 @@ public class Main {
 
         QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
 
-//        QuadTree<Nehnutelnost> tree1 = new QuadTree<Nehnutelnost>(0,0,100,100, 10);
-//        Nehnutelnost n = new Nehnutelnost(1,"ss",null, null, null);
+//        Structures.QuadTree<Entities.Nehnutelnost> tree1 = new Structures.QuadTree<Entities.Nehnutelnost>(0,0,100,100, 10);
+//        Entities.Nehnutelnost n = new Entities.Nehnutelnost(1,"ss",null, null, null);
 //        tree1.insert(tree1.getRoot(),10,10,20,20,n);
 
 //        tree.insert(tree.getRoot(),10,10,20,20,1);
@@ -55,7 +55,7 @@ public class Main {
 //
 
 //
-//        QuadTreeNodeKeys<Integer> dataFound = null;
+//        Structures.QuadTreeNodeKeys<Integer> dataFound = null;
 //        dataFound = tree.delete(20,70,25,80,0);
 //        dataFound = tree.delete(10,10,15,15,1);
 //        dataFound = tree.delete(50,50,60,60,3);

@@ -1,4 +1,4 @@
-import java.util.Objects;
+package Structures;
 
 public class QuadTreeNodeKeys<T extends Comparable<T>> {
     private int ID;

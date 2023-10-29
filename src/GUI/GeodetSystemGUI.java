@@ -1,8 +1,6 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 
 public class GeodetSystemGUI extends JFrame {
 
@@ -12,13 +10,32 @@ public class GeodetSystemGUI extends JFrame {
     private JTabbedPane tabbedPane3;
     private JTabbedPane tabbedPane4;
     private JTabbedPane tabbedPane5;
-    private JTextField textFieldReplications;
-    private JTextField textFieldWorkers2;
+    private JTextField widthCharSearchNehnutelnost;
+    private JTextField lengthCharSearchNehnutelnost;
     private JTextField textFieldWorkers1;
     private JTable table1;
     private JTable table2;
     private JTable table3;
     private JTable table4;
+    private JTextField tree_minX;
+    private JTextField tree_minY;
+    private JTextField tree_maxDepth;
+    private JTextField tree_maxX;
+    private JTextField tree_maxY;
+    private JTextField minWidthParcela;
+    private JTextField minLengthParcela;
+    private JTextField maxWidthParcela;
+    private JTextField maxLengthParcela;
+    private JTextField numberParcela;
+    private JTextField minWidthNehnutelnost;
+    private JTextField minLengthNehnutelnost;
+    private JTextField maxWidthNehnutelnost;
+    private JTextField maxLengthNutelnost;
+    private JTextField numberNehnutelnost;
+    private JScrollPane listParcelaFill;
+    private JScrollPane listNehnutelnostFill;
+    private JTextField lengthPositionSearchNehnutelnost;
+    private JTextField widthPositionSearchNehnutelnost;
 
     public GeodetSystemGUI(){
         this.setContentPane(mainPanel);
