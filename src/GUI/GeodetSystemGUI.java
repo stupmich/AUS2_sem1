@@ -36,6 +36,7 @@ public class GeodetSystemGUI extends JFrame {
     private JScrollPane listNehnutelnostFill;
     private JTextField lengthPositionSearchNehnutelnost;
     private JTextField widthPositionSearchNehnutelnost;
+    private JTextField widthCharSearchParcela;
 
     public GeodetSystemGUI(){
         this.setContentPane(mainPanel);
