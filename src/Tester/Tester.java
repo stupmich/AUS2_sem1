@@ -41,7 +41,7 @@ public class Tester {
         ArrayList<Integer> wrong_numbers = new ArrayList<Integer>();
 
         Random random = new Random();
-        random.setSeed(91331);
+//        random.setSeed(91331);
         int seed = random.nextInt(100000);
         System.out.println(seed);
 
@@ -165,7 +165,7 @@ public class Tester {
         ArrayList<Integer> wrong_numbers = new ArrayList<Integer>();
 
         Random random = new Random();
-        random.setSeed(97732);
+//        random.setSeed(97732);
         int seed = random.nextInt(100000);
 
         for (int i = 0; i < p_number_data; i++) {

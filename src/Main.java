@@ -7,12 +7,31 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-//        GeodetSystemGUI gui = new GeodetSystemGUI();
-
+        GeodetSystemGUI gui = new GeodetSystemGUI();
 
         Tester tester = new Tester();
-//        tester.testChangeMaxHeight(100,10000,0,0,100,100,10, 100);
-        tester.testTree(10000,70,20,10,0,0,100,100,10, 100);
+        tester.testChangeMaxHeight(100,10000,0,0,100,100,10, 100);
+//        tester.testTree(10000,80,20,0,0,0,100,100,10, 100);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
 
 //        tree.insert(tree.getRoot(),10,10,20,20,1);
