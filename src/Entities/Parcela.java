@@ -1,20 +1,20 @@
 package Entities;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Parcela extends AreaObject implements Comparable<Parcela>{
-    private ArrayList<Nehnutelnost> nehnutelnosti;
+    private LinkedList<Nehnutelnost> nehnutelnosti;
 
-    public Parcela(int cisloParcely, String popis, ArrayList<Nehnutelnost> nehnutelnosti, GPS minGPS, GPS maxGPS) {
+    public Parcela(int cisloParcely, String popis, GPS minGPS, GPS maxGPS) {
         super(cisloParcely, popis, minGPS, maxGPS);
-        this.nehnutelnosti = nehnutelnosti;
+        nehnutelnosti = new LinkedList<Nehnutelnost>();
     }
 
-    public ArrayList<Nehnutelnost> getNehnutelnosti() {
+    public LinkedList<Nehnutelnost> getNehnutelnosti() {
         return nehnutelnosti;
     }
 
-    public void setNehnutelnosti(ArrayList<Nehnutelnost> nehnutelnosti) {
+    public void setNehnutelnosti(LinkedList<Nehnutelnost> nehnutelnosti) {
         this.nehnutelnosti = nehnutelnosti;
     }
 

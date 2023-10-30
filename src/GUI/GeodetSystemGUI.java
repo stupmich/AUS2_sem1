@@ -21,9 +21,7 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
     private JTextField widthCharSearchNehnutelnost;
     private JTextField lengthCharSearchNehnutelnost;
     private JTextField popisInsertNehnutelnost;
-    private JTable table1;
     private JTable listSearchNehnutelnost;
-    private JTable table2;
     private JTable table4;
     private JTable listSearchAllNehnutelnost;
     private DefaultTableModel nehnutelnostTableModel;
@@ -46,8 +44,6 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
     private JTextField maxWidthNehnutelnost;
     private JTextField maxLengthNutelnost;
     private JTextField numberNehnutelnost;
-    private JScrollPane listParcelaFill;
-    private JScrollPane listNehnutelnostFill;
     private JTextField lengthPositionSearchNehnutelnost;
     private JTextField widthPositionSearchNehnutelnost;
     private JTextField widthCharSearchParcela;
@@ -78,6 +74,8 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
     private JTable listSearchAllParcela;
     private JButton insertNehnutelnostButton;
     private JTable listNehnutelnostInsert;
+    private JCheckBox optimalizeTreeCheckBoxInsertNehnutelnost;
+    private JCheckBox optimalizeTreeCheckBoxFillSystem;
 
 
     private SystemApp app;
@@ -95,28 +93,28 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
         nehnutelnostTableModel.addColumn("Cislo");
         nehnutelnostTableModel.addColumn("Popis");
         nehnutelnostTableModel.addColumn("GPS1");
-        nehnutelnostTableModel.addColumn("GPSľ");
+        nehnutelnostTableModel.addColumn("GPS2");
         listSearchNehnutelnost.setModel(nehnutelnostTableModel);
 
         nehnutelnostAllTableModel = new DefaultTableModel();
         nehnutelnostAllTableModel.addColumn("Cislo");
         nehnutelnostAllTableModel.addColumn("Popis");
         nehnutelnostAllTableModel.addColumn("GPS1");
-        nehnutelnostAllTableModel.addColumn("GPSľ");
+        nehnutelnostAllTableModel.addColumn("GPS2");
         listSearchAllNehnutelnost.setModel(nehnutelnostAllTableModel);
 
         nehnutelnostInsertTableModel = new DefaultTableModel();
         nehnutelnostInsertTableModel.addColumn("Cislo");
         nehnutelnostInsertTableModel.addColumn("Popis");
         nehnutelnostInsertTableModel.addColumn("GPS1");
-        nehnutelnostInsertTableModel.addColumn("GPSľ");
+        nehnutelnostInsertTableModel.addColumn("GPS2");
         listNehnutelnostInsert.setModel(nehnutelnostInsertTableModel);
 
         parcelaTableModel = new DefaultTableModel();
         parcelaTableModel.addColumn("Cislo");
         parcelaTableModel.addColumn("Popis");
         parcelaTableModel.addColumn("GPS1");
-        parcelaTableModel.addColumn("GPSľ");
+        parcelaTableModel.addColumn("GPS2");
         listSearchAllParcela.setModel(parcelaTableModel);
 
         fillSystemButton.addActionListener(this);
@@ -134,7 +132,9 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
                                  Double.parseDouble(minWidthNehnutelnost.getText()), Double.parseDouble(minLengthNehnutelnost.getText()),
                                  Double.parseDouble(maxWidthNehnutelnost.getText()), Double.parseDouble(maxLengthNutelnost.getText()),
                                  Double.parseDouble(minWidthParcela.getText()), Double.parseDouble(minLengthParcela.getText()),
-                                 Double.parseDouble(maxWidthParcela.getText()), Double.parseDouble(maxLengthParcela.getText()));
+                                 Double.parseDouble(maxWidthParcela.getText()), Double.parseDouble(maxLengthParcela.getText()), optimalizeTreeCheckBoxFillSystem.isSelected());
+
+            JOptionPane.showMessageDialog(null,"Systém bol naplnený.");
 
         } else if (e.getSource() == searchNehnutelnostiButton) {
             LinkedList<Nehnutelnost> nehnutelnosti = this.app.searchNehnutelnost(widthCharSearchNehnutelnost.getText().toCharArray()[0], Double.parseDouble(widthPositionSearchNehnutelnost.getText()) ,
@@ -173,7 +173,7 @@ public class GeodetSystemGUI extends JFrame implements ActionListener {
                                                                 minLengthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(minLengthPositionInsertNehnutelnost.getText()),
                                                                 maxWidthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(maxWidthPositionInsertNehnutelnost.getText()),
                                                                 maxLengthCharInsertNehnutelnost.getText().toCharArray()[0], Double.parseDouble(maxLengthPositionInsertNehnutelnost.getText()),
-                                                                Integer.parseInt(supisneCisloInsertNehnutelnost.getText()), popisInsertNehnutelnost.getText());
+                                                                Integer.parseInt(supisneCisloInsertNehnutelnost.getText()), popisInsertNehnutelnost.getText(), optimalizeTreeCheckBoxInsertNehnutelnost.isSelected());
 
             nehnutelnostInsertTableModel.addRow(new Object[]{ nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
         }

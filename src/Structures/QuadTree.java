@@ -351,6 +351,7 @@ public class QuadTree<T extends Comparable<T>>  {
                         if (!currentNode.intersectsInnerLines(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement())) {
                             this.insert(currentNode, keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
                             keysToRemove.add(keys);
+                            //TODO ERROR ORIGINAL DATA INTERSECTS
                         }
                     }
 
@@ -408,63 +409,96 @@ public class QuadTree<T extends Comparable<T>>  {
         return nodeOnNewHeight;
     }
 
-    public void optimizeTree() {
+    public QuadTree<T> getOptimizedTree() {
         LinkedList<QuadTreeNodeKeys<T>> tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
         LinkedList<QuadTreeNodeKeys<T>> new_tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
         LinkedList<QuadTreeNodeKeys<T>> intersectingDataNew = new LinkedList<QuadTreeNodeKeys<T>>();
         LinkedList<QuadTreeNodeKeys<T>> intersectingDataCurrent = new LinkedList<QuadTreeNodeKeys<T>>();
 
+        QuadTree<T> optimized_tree = null;
+        QuadTree<T> help_tree = null;
+
         double x10percent = (this.maxX - this.minX) * 0.2;
         double y10percent = (this.maxY - this.minY) * 0.2;
         int bestNumberOfIntersectingData = Integer.MAX_VALUE;
 
-//        double min_max_X = Double.MIN_VALUE;
-//        double max_min_X = Double.MAX_VALUE;
-//        double min_max_Y = Double.MIN_VALUE;
-//        double max_min_Y = Double.MAX_VALUE;
-//
-//        for (Structures.QuadTreeNodeKeys<T> keys : tree_keys ) {
-//            if (keys.getMaxXElement() > min_max_X) {
-//                min_max_X = keys.getMaxXElement();
-//            }
-//            if (keys.getMaxYElement() > min_max_Y) {
-//                min_max_Y = keys.getMaxYElement();
-//            }
-//
-//            if (keys.getMinXElement() < max_min_X) {
-//                max_min_X = keys.getMinXElement();
-//            }
-//            if (keys.getMinYElement() < max_min_Y) {
-//                max_min_Y = keys.getMinYElement();
-//            }
-//        }
+        double min_max_X = Double.MIN_VALUE;
+        double max_min_X = Double.MAX_VALUE;
+        double min_max_Y = Double.MIN_VALUE;
+        double max_min_Y = Double.MAX_VALUE;
 
         tree_keys = this.find(this.root,this.minX,this.minY, this.maxX,this.maxY);
         intersectingDataCurrent = this.findAllIntersectingData();
 
+        for (Structures.QuadTreeNodeKeys<T> keys : tree_keys ) {
+            if (keys.getMaxXElement() > min_max_X) {
+                min_max_X = keys.getMaxXElement();
+            }
+            if (keys.getMaxYElement() > min_max_Y) {
+                min_max_Y = keys.getMaxYElement();
+            }
+
+            if (keys.getMinXElement() < max_min_X) {
+                max_min_X = keys.getMinXElement();
+            }
+            if (keys.getMinYElement() < max_min_Y) {
+                max_min_Y = keys.getMinYElement();
+            }
+        }
+
         for (double xChange = -1.0 * x10percent; xChange <= 1.0 * x10percent; xChange++) {
             for (double yChange = -1.0 * y10percent; yChange <= 1.0 * y10percent; yChange++) {
-                QuadTree<T> optimized_tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
 
-                for (QuadTreeNodeKeys<T> keys : tree_keys ) {
-
-                    optimized_tree.insert(optimized_tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
+                if (this.minX + xChange > max_min_X) {
+                    continue;
                 }
 
-                new_tree_keys = optimized_tree.find(optimized_tree.getRoot(),optimized_tree.minX, optimized_tree.minY, optimized_tree.maxX, optimized_tree.maxY);
+                if (this.minY + yChange > max_min_Y) {
+                    continue;
+                }
+
+                if (this.maxX + xChange < min_max_X) {
+                    continue;
+                }
+
+                if (this.maxY + yChange < min_max_Y) {
+                    continue;
+                }
+
+                help_tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
+
+                for (QuadTreeNodeKeys<T> keys : tree_keys ) {
+                    help_tree.insert(help_tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData());
+                }
+
+                new_tree_keys = help_tree.find(help_tree.getRoot(),help_tree.minX, help_tree.minY, help_tree.maxX, help_tree.maxY);
+
                 if (new_tree_keys.size() == tree_keys.size()) {
-                    intersectingDataNew = optimized_tree.findAllIntersectingData();
+                    intersectingDataNew = help_tree.findAllIntersectingData();
 
                     if (intersectingDataNew.size() < intersectingDataCurrent.size() && intersectingDataNew.size() < bestNumberOfIntersectingData) {
                         bestNumberOfIntersectingData = intersectingDataNew.size();
-                        System.out.println(":_)");
+                        optimized_tree = help_tree;
                     }
                 }
             }
         }
+        return optimized_tree;
     }
 
-    private LinkedList<QuadTreeNodeKeys<T>> findAllIntersectingData() {
+    public QuadTree<T> optimize() {
+        QuadTree<T> optimized_tree = this.getOptimizedTree();
+
+        if (optimized_tree != null) {
+            if (this.evaluateHealth(optimized_tree) < 80) {
+                return optimized_tree;
+            }
+        }
+
+        return this;
+    }
+
+    public LinkedList<QuadTreeNodeKeys<T>> findAllIntersectingData() {
         LinkedList<QuadTreeNodeKeys<T>> intersectingData = new LinkedList<QuadTreeNodeKeys<T>>();
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
 
@@ -500,5 +534,21 @@ public class QuadTree<T extends Comparable<T>>  {
 
     public QuadTreeNode<T> getRoot() {
         return root;
+    }
+
+    public double getMinX() {
+        return minX;
+    }
+
+    public double getMinY() {
+        return minY;
+    }
+
+    public double getMaxX() {
+        return maxX;
+    }
+
+    public double getMaxY() {
+        return maxY;
     }
 }

@@ -3,6 +3,7 @@ import Entities.Nehnutelnost;
 import Entities.Parcela;
 import Entities.GPS;
 import Structures.QuadTree;
+import Structures.QuadTreeNode;
 import Structures.QuadTreeNodeKeys;
 
 import java.util.IllegalFormatCodePointException;
@@ -18,10 +19,17 @@ public class SystemApp {
 
     public void fillSystem(double minX, double minY, double maxX, double maxY, int maxDepth, int nehnutelnostiCount, int parcelyCount,
                             double minWidthNehnutelnost, double minLengthNehnutelnost, double maxWidthNehnutelnost, double maxLengthNehnutelnost,
-                             double minWidthParcela, double minLengthParcela, double maxWidthParcela, double maxLengthParcela) {
+                             double minWidthParcela, double minLengthParcela, double maxWidthParcela, double maxLengthParcela,
+                              boolean optimize) {
 
         treeNehnutelnosti = new QuadTree<Nehnutelnost>(minX, minY, maxX, maxY, maxDepth);
         treeParcely = new QuadTree<Parcela>(minX, minY, maxX, maxY, maxDepth);
+
+        LinkedList<QuadTreeNodeKeys<Parcela>> parcelykeys = new LinkedList<QuadTreeNodeKeys<Parcela>>();
+        LinkedList<QuadTreeNodeKeys<Nehnutelnost>> nehnutelnostikeys = new LinkedList<QuadTreeNodeKeys<Nehnutelnost>>();
+
+        LinkedList<Nehnutelnost> nehnutelnosti = new LinkedList<Nehnutelnost>();
+        LinkedList<Parcela> parcely = new LinkedList<Parcela>();
 
         Nehnutelnost helpNehnutelnost = null;
         Parcela helpParcela = null;
@@ -45,45 +53,7 @@ public class SystemApp {
         char yMinChar;
         char yMaxChar;
 
-        for (int i = 0; i < nehnutelnostiCount; i++) {
-            helpWidth = random.nextDouble(minWidthNehnutelnost, maxWidthNehnutelnost);
-            helpLength = random.nextDouble(minLengthNehnutelnost, maxLengthNehnutelnost);
-
-            positionMinX = random.nextDouble(minX, maxX - helpWidth);
-            positionMinY = random.nextDouble(minY, maxY - helpLength);
-
-            if (positionMinX >= minX && positionMinX <= minX + halfX) {
-                xMinChar = 'W';
-            } else {
-                xMinChar = 'E';
-            }
-
-            if (positionMinY >= minY && positionMinY <= minY + halfY) {
-                yMinChar = 'S';
-            } else {
-                yMinChar = 'N';
-            }
-
-            positionMaxX = positionMinX + helpWidth;
-            positionMaxY = positionMinY + helpLength;
-
-            if (positionMaxX >= minX && positionMaxX <= minX + halfX) {
-                xMaxChar = 'W';
-            } else {
-                xMaxChar = 'E';
-            }
-
-            if (positionMaxY >= minY && positionMaxY <= minY + halfY) {
-                yMaxChar = 'S';
-            } else {
-                yMaxChar = 'N';
-            }
-
-            helpNehnutelnost = new Nehnutelnost(random.nextInt(1000), "RandomPopisTODO",null,
-                                                 new GPS(yMinChar,positionMinX,xMinChar,positionMinY),
-                                                    new GPS(yMaxChar,positionMaxX,xMaxChar,positionMaxY));
-            treeNehnutelnosti.insert(treeNehnutelnosti.getRoot(),positionMinX, positionMinY,positionMaxX, positionMaxY, helpNehnutelnost);
-        }
+        int helpNumber;
 
         for (int j = 0; j < parcelyCount; j++) {
             helpWidth = random.nextDouble(minWidthParcela, maxWidthParcela);
@@ -119,15 +89,88 @@ public class SystemApp {
                 yMaxChar = 'N';
             }
 
-            helpParcela = new Parcela(random.nextInt(1000), "RandomPopisTODO",null,
+            helpNumber = random.nextInt(1000);
+
+            helpParcela = new Parcela(random.nextInt(1000), "Parcela" + helpNumber ,
                     new GPS(yMinChar,positionMinX,xMinChar,positionMinY),
                     new GPS(yMaxChar,positionMaxX,xMaxChar,positionMaxY));
+
             treeParcely.insert(treeParcely.getRoot(),positionMinX, positionMinY,positionMaxX, positionMaxY, helpParcela);
         }
 
+        for (int i = 0; i < nehnutelnostiCount; i++) {
+            helpWidth = random.nextDouble(minWidthNehnutelnost, maxWidthNehnutelnost);
+            helpLength = random.nextDouble(minLengthNehnutelnost, maxLengthNehnutelnost);
 
-        System.out.println("Pocet parciel" + treeParcely.find(treeParcely.getRoot(),minX,minY,maxX,maxY).size());
-        System.out.println("Pocet nehnutelnosti" + treeNehnutelnosti.find(treeNehnutelnosti.getRoot(),minX,minY,maxX,maxY).size());
+            positionMinX = random.nextDouble(minX, maxX - helpWidth);
+            positionMinY = random.nextDouble(minY, maxY - helpLength);
+
+            if (positionMinX >= minX && positionMinX <= minX + halfX) {
+                xMinChar = 'W';
+            } else {
+                xMinChar = 'E';
+            }
+
+            if (positionMinY >= minY && positionMinY <= minY + halfY) {
+                yMinChar = 'S';
+            } else {
+                yMinChar = 'N';
+            }
+
+            positionMaxX = positionMinX + helpWidth;
+            positionMaxY = positionMinY + helpLength;
+
+            if (positionMaxX >= minX && positionMaxX <= minX + halfX) {
+                xMaxChar = 'W';
+            } else {
+                xMaxChar = 'E';
+            }
+
+            if (positionMaxY >= minY && positionMaxY <= minY + halfY) {
+                yMaxChar = 'S';
+            } else {
+                yMaxChar = 'N';
+            }
+
+            helpNumber = random.nextInt(1000);
+
+            parcelykeys = treeParcely.findContainedOrIntersecting(treeParcely.getRoot(), positionMinX, positionMinY, positionMaxX, positionMaxY);
+
+            parcely.clear();
+            if (parcelykeys != null) {
+                for (QuadTreeNodeKeys<Parcela> keys: parcelykeys) {
+                    parcely.add(keys.getData());
+                }
+            }
+
+            helpNehnutelnost = new Nehnutelnost(helpNumber, "Nehnutelnost" + helpNumber,
+                    new GPS(yMinChar,positionMinX,xMinChar,positionMinY),
+                    new GPS(yMaxChar,positionMaxX,xMaxChar,positionMaxY));
+            treeNehnutelnosti.insert(treeNehnutelnosti.getRoot(),positionMinX, positionMinY,positionMaxX, positionMaxY, helpNehnutelnost);
+
+            helpNehnutelnost.getParcely().addAll(parcely);
+
+            if (parcely.getFirst() != null) {
+                parcely.getFirst().getNehnutelnosti().add(helpNehnutelnost);
+            }
+        }
+
+        if (optimize) {
+            System.out.println("pred " + treeNehnutelnosti.findAllIntersectingData().size());
+            treeNehnutelnosti = treeNehnutelnosti.optimize();
+            System.out.println("po " + treeNehnutelnosti.findAllIntersectingData().size());
+            System.out.println("minx: " + treeNehnutelnosti.getMinX() + " minY: " + treeNehnutelnosti.getMinY() + " maxx: " + treeNehnutelnosti.getMaxX() + " maxY: " + treeNehnutelnosti.getMaxY());
+
+
+            System.out.println("pred " + treeParcely.findAllIntersectingData().size());
+            treeParcely = treeParcely.optimize();
+            System.out.println("po " + treeParcely.findAllIntersectingData().size());
+            System.out.println("minx: " + treeParcely.getMinX() + " minY: " + treeParcely.getMinY() + " maxx: " + treeParcely.getMaxX() + " maxY: " + treeParcely.getMaxY());
+
+        }
+
+        System.out.println("Pocet parciel" + treeParcely.find(treeParcely.getRoot(),treeParcely.getMinX(),treeParcely.getMinY(),treeParcely.getMaxX(),treeParcely.getMaxY()).size());
+        System.out.println("Pocet nehnutelnosti" + treeNehnutelnosti.find(treeNehnutelnosti.getRoot(),treeNehnutelnosti.getMinX(),treeNehnutelnosti.getMinY(),treeNehnutelnosti.getMaxX(),treeNehnutelnosti.getMaxY()).size());
     }
 
     public LinkedList<Nehnutelnost> searchNehnutelnost(char xChar, double p_x, char yChar, double p_y) {
@@ -185,26 +228,46 @@ public class SystemApp {
             return null;
         }
 
-        LinkedList<Parcela> parceli = new LinkedList<Parcela>();
-        LinkedList<QuadTreeNodeKeys<Parcela>> parceliKeys = new LinkedList<QuadTreeNodeKeys<Parcela>>();
+        LinkedList<Parcela> parcely = new LinkedList<Parcela>();
+        LinkedList<QuadTreeNodeKeys<Parcela>> parcelyKeys = new LinkedList<QuadTreeNodeKeys<Parcela>>();
 
 
-        parceliKeys = treeParcely.findContainedOrIntersecting(treeParcely.getRoot(),p_minX,p_minY,p_maxX,p_maxy);
+        parcelyKeys = treeParcely.findContainedOrIntersecting(treeParcely.getRoot(),p_minX,p_minY,p_maxX,p_maxy);
 
-        for (QuadTreeNodeKeys<Parcela> key : parceliKeys) {
-            parceli.add(key.getData());
+        for (QuadTreeNodeKeys<Parcela> key : parcelyKeys) {
+            parcely.add(key.getData());
         }
 
-        return parceli;
+        return parcely;
     }
 
-    public Nehnutelnost insertNehnutelnost(char minXChar, double p_minX, char minYChar, double p_minY, char maxXChar, double p_maxX, char maxYChar, double p_maxY, int supisneCislo, String popis) {
+    public Nehnutelnost insertNehnutelnost(char minXChar, double p_minX, char minYChar, double p_minY, char maxXChar, double p_maxX, char maxYChar, double p_maxY, int supisneCislo, String popis, boolean optimize) {
         if (treeNehnutelnosti == null) {
             return null;
         }
 
-        Nehnutelnost nehnutelnost = new Nehnutelnost(supisneCislo, popis, null, new GPS(minYChar, p_minY, minXChar, p_minX), new GPS(maxYChar, p_maxY, maxXChar, p_maxX) ); // TODO REFERENCIE NA PARCELY
-        treeNehnutelnosti.insert(treeNehnutelnosti.getRoot(), p_minX, p_minY, p_maxX, maxYChar, nehnutelnost);
+        LinkedList<QuadTreeNodeKeys<Parcela>> parcelykeys = treeParcely.findContainedOrIntersecting(treeParcely.getRoot(), p_minX, p_minY, p_maxX, p_maxY);
+        LinkedList<Parcela> parcely = new LinkedList<Parcela>();
+
+        for (QuadTreeNodeKeys<Parcela> keys: parcelykeys) {
+            parcely.add(keys.getData());
+        }
+
+        Nehnutelnost nehnutelnost = new Nehnutelnost(supisneCislo, popis, new GPS(minYChar, p_minY, minXChar, p_minX), new GPS(maxYChar, p_maxY, maxXChar, p_maxX) ); // TODO REFERENCIE NA PARCELY
+        nehnutelnost.getParcely().addAll(parcely);
+
+//        parcely.getFirst().getNehnutelnosti().add(nehnutelnost);
+
+        for (Parcela parcela : parcely) {
+            parcela.getNehnutelnosti().add(nehnutelnost);
+        }
+
+        treeNehnutelnosti.insert(treeNehnutelnosti.getRoot(), p_minX, p_minY, p_maxX, p_maxY, nehnutelnost);
+
+        if (optimize) {
+            treeNehnutelnosti = treeNehnutelnosti.optimize();
+            System.out.println("minx: " + treeNehnutelnosti.getMinX() + " minY: " + treeNehnutelnosti.getMinY() + " maxx: " + treeNehnutelnosti.getMaxX() + " maxY: " + treeNehnutelnosti.getMaxY());
+        }
 
         return nehnutelnost;
     }
