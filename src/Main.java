@@ -10,8 +10,7 @@ public class Main {
         GeodetSystemGUI gui = new GeodetSystemGUI();
 
         Tester tester = new Tester();
-        tester.testChangeMaxHeight(100,10000,0,0,100,100,10, 100);
-//        tester.testTree(10000,80,20,0,0,0,100,100,10, 100);
+//        tester.testTree(100000,50,20,30,0,0,100,100,10, 100);
 
 
 
