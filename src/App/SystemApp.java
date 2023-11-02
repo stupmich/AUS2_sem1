@@ -15,6 +15,8 @@ public class SystemApp {
     private QuadTree<Parcela> treeParcely;
 
     public SystemApp() {
+        treeNehnutelnosti = new QuadTree<Nehnutelnost>(0, 0, 100, 100, 20);
+        treeParcely = new QuadTree<Parcela>(0, 0, 100, 100, 20);
     }
 
     public void fillSystem(double minX, double minY, double maxX, double maxY, int maxDepth, int nehnutelnostiCount, int parcelyCount,
@@ -198,11 +200,47 @@ public class SystemApp {
 
         nehnutelnostiKeys = treeNehnutelnosti.findContainedOrIntersecting(x,y,x,y);
 
-        for (QuadTreeNodeKeys<Nehnutelnost> key : nehnutelnostiKeys) {
-            nehnutelnosti.add(key.getData());
+        if (nehnutelnostiKeys != null) {
+            for (QuadTreeNodeKeys<Nehnutelnost> key : nehnutelnostiKeys) {
+                nehnutelnosti.add(key.getData());
+            }
         }
 
         return nehnutelnosti;
+    }
+
+    public LinkedList<Parcela> searchParcela(char xChar, double p_x, char yChar, double p_y) {
+        if (treeParcely == null) {
+            return null;
+        }
+
+        LinkedList<Parcela> parcely = new LinkedList<Parcela>();
+        LinkedList<QuadTreeNodeKeys<Parcela>> parcelyKeys = new LinkedList<QuadTreeNodeKeys<Parcela>>();
+
+        double x = p_x;
+        double y = p_y;
+
+//        if (xChar == 'N') {
+//            x = p_x;
+//        } else if (xChar == 'S') {
+//            x = p_x * -1.0;
+//        }
+//
+//        if (yChar == 'W') {
+//            y = p_y * -1.0;
+//        } else if (yChar == 'E') {
+//            y = p_y;
+//        }
+
+        parcelyKeys = treeParcely.findContainedOrIntersecting(x,y,x,y);
+
+        if (parcelyKeys != null) {
+            for (QuadTreeNodeKeys<Parcela> key : parcelyKeys) {
+                parcely.add(key.getData());
+            }
+        }
+
+        return parcely;
     }
 
     public LinkedList<Nehnutelnost> searchNehnutelnostArea(char minXChar, double p_minX, char minYChar, double p_minY, char maxXChar, double p_maxX, char maxYChar, double p_maxy) {
@@ -216,8 +254,10 @@ public class SystemApp {
 
         nehnutelnostiKeys = treeNehnutelnosti.findContainedOrIntersecting(p_minX,p_minY,p_maxX,p_maxy);
 
-        for (QuadTreeNodeKeys<Nehnutelnost> key : nehnutelnostiKeys) {
-            nehnutelnosti.add(key.getData());
+        if (nehnutelnostiKeys != null) {
+            for (QuadTreeNodeKeys<Nehnutelnost> key : nehnutelnostiKeys) {
+                nehnutelnosti.add(key.getData());
+            }
         }
 
         return nehnutelnosti;
@@ -234,8 +274,10 @@ public class SystemApp {
 
         parcelyKeys = treeParcely.findContainedOrIntersecting(p_minX,p_minY,p_maxX,p_maxy);
 
-        for (QuadTreeNodeKeys<Parcela> key : parcelyKeys) {
-            parcely.add(key.getData());
+        if (parcelyKeys != null) {
+            for (QuadTreeNodeKeys<Parcela> key : parcelyKeys) {
+                parcely.add(key.getData());
+            }
         }
 
         return parcely;
@@ -249,17 +291,19 @@ public class SystemApp {
         LinkedList<QuadTreeNodeKeys<Parcela>> parcelykeys = treeParcely.findContainedOrIntersecting(p_minX, p_minY, p_maxX, p_maxY);
         LinkedList<Parcela> parcely = new LinkedList<Parcela>();
 
-        for (QuadTreeNodeKeys<Parcela> keys: parcelykeys) {
-            parcely.add(keys.getData());
+        if (parcelykeys != null) {
+            for (QuadTreeNodeKeys<Parcela> keys: parcelykeys) {
+                parcely.add(keys.getData());
+            }
         }
 
         Nehnutelnost nehnutelnost = new Nehnutelnost(supisneCislo, popis, new GPS(minYChar, p_minY, minXChar, p_minX), new GPS(maxYChar, p_maxY, maxXChar, p_maxX) ); // TODO REFERENCIE NA PARCELY
         nehnutelnost.getParcely().addAll(parcely);
 
-//        parcely.getFirst().getNehnutelnosti().add(nehnutelnost);
-
-        for (Parcela parcela : parcely) {
-            parcela.getNehnutelnosti().add(nehnutelnost);
+        if (parcely != null) {
+            for (Parcela parcela : parcely) {
+                parcela.getNehnutelnosti().add(nehnutelnost);
+            }
         }
 
         treeNehnutelnosti.insert(p_minX, p_minY, p_maxX, p_maxY, nehnutelnost);
@@ -270,5 +314,82 @@ public class SystemApp {
         }
 
         return nehnutelnost;
+    }
+
+    public Parcela insertParcela(char minXChar, double p_minX, char minYChar, double p_minY, char maxXChar, double p_maxX, char maxYChar, double p_maxY, int supisneCislo, String popis, boolean optimize) {
+        if (treeParcely == null) {
+            return null;
+        }
+
+        LinkedList<QuadTreeNodeKeys<Nehnutelnost>> nehnutelnostiKeys = treeNehnutelnosti.findContainedOrIntersecting(p_minX, p_minY, p_maxX, p_maxY);
+        LinkedList<Nehnutelnost> nehnutelnosti = new LinkedList<Nehnutelnost>();
+
+        if (nehnutelnostiKeys != null) {
+            for (QuadTreeNodeKeys<Nehnutelnost> keys: nehnutelnostiKeys) {
+                nehnutelnosti.add(keys.getData());
+            }
+        }
+
+        Parcela parcela = new Parcela(supisneCislo, popis, new GPS(minYChar, p_minY, minXChar, p_minX), new GPS(maxYChar, p_maxY, maxXChar, p_maxX) );
+        parcela.getNehnutelnosti().addAll(nehnutelnosti);
+
+        if (nehnutelnosti != null) {
+            for (Nehnutelnost nehnutelnost : nehnutelnosti) {
+                nehnutelnost.getParcely().add(parcela);
+            }
+        }
+
+        treeParcely.insert(p_minX, p_minY, p_maxX, p_maxY, parcela);
+
+        if (optimize) {
+            treeParcely = treeParcely.optimize();
+            System.out.println("minx: " + treeParcely.getMinX() + " minY: " + treeParcely.getMinY() + " maxx: " + treeParcely.getMaxX() + " maxY: " + treeParcely.getMaxY());
+        }
+
+        return parcela;
+    }
+
+    public Nehnutelnost deleteNehnutelost(Nehnutelnost p_nehnutelnost) {
+        Nehnutelnost nehnutelnost = treeNehnutelnosti.deleteByData(p_nehnutelnost);
+
+        LinkedList<Parcela> parcely = nehnutelnost.getParcely();
+
+        for (Parcela parcela: parcely) {
+            parcela.getNehnutelnosti().remove(nehnutelnost);
+        }
+
+        return nehnutelnost;
+    }
+
+    public Parcela deleteParcela(Parcela p_parcela) {
+        Parcela parcela = treeParcely.deleteByData(p_parcela);
+
+        LinkedList<Nehnutelnost> nehnutelnosti = parcela.getNehnutelnosti();
+
+        for (Nehnutelnost nehnutelnost: nehnutelnosti) {
+            nehnutelnost.getParcely().remove(parcela);
+        }
+
+        return parcela;
+    }
+
+    public Nehnutelnost editNehnutelnost(Nehnutelnost p_nehnutelnost_to_edit, int supisneCislo, String popis,
+                                         char min_y, double min_positionY, char min_x, double min_positionX,
+                                         char max_y, double max_positionY, char max_x, double max_positionX) {
+
+        p_nehnutelnost_to_edit.setSupisneCislo(supisneCislo);
+        p_nehnutelnost_to_edit.setPopis(popis);
+
+        p_nehnutelnost_to_edit.getMinGPS().setX(min_x);
+        p_nehnutelnost_to_edit.getMinGPS().setPositionX(min_positionX);
+        p_nehnutelnost_to_edit.getMinGPS().setY(min_y);
+        p_nehnutelnost_to_edit.getMinGPS().setPositionY(min_positionY);
+
+        p_nehnutelnost_to_edit.getMaxGPS().setX(max_x);
+        p_nehnutelnost_to_edit.getMaxGPS().setPositionX(max_positionX);
+        p_nehnutelnost_to_edit.getMaxGPS().setY(max_y);
+        p_nehnutelnost_to_edit.getMaxGPS().setPositionY(max_positionY);
+
+        return p_nehnutelnost_to_edit;
     }
 }

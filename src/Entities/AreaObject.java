@@ -1,6 +1,7 @@
 package Entities;
 
-public class AreaObject{
+public class AreaObject {
+    private int ID;
     private int supisneCislo;
     private String popis;
     private GPS minGPS;

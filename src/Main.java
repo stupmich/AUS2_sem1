@@ -9,8 +9,12 @@ public class Main {
     public static void main(String[] args) {
         GeodetSystemGUI gui = new GeodetSystemGUI();
 
-        Tester tester = new Tester();
-//        tester.testTree(100000,50,20,30,0,0,100,100,10, 100);
+
+
+
+//
+//        Tester tester = new Tester();
+//        tester.testTree(10000,50,20,30,0,0,100,100,10, 100);
 
 
 
@@ -32,9 +36,12 @@ public class Main {
 
 
 //        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
-
-//        tree.insert(tree.getRoot(),10,10,20,20,1);
-//        tree.insert(tree.getRoot(),40,40,60,60,2);
+//
+//        tree.insert(10,10,20,20,1);
+//        tree.insert(40,40,60,60,2);
+//        tree.insert(10,30,50,50,2);
+//
+//        QuadTreeNodeKeys<Integer> k = tree.findByData(2);
 //
 //        ArrayList<QuadTreeNodeKeys<Integer>> al = tree.findContainedOrIntersecting(tree.getRoot(),0,0,50,50);
 

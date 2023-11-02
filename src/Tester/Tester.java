@@ -114,7 +114,7 @@ public class Tester {
                             System.out.println();
                         }
 
-                        if (tree.delete(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getID()) != null){
+                        if (tree.delete(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getID(), keys.getData()) != null){
                             n_delete++;
                             added_numbers.remove(index);
                             added_keys.remove(index);

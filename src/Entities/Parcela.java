@@ -1,6 +1,7 @@
 package Entities;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class Parcela extends AreaObject implements Comparable<Parcela>{
     private LinkedList<Nehnutelnost> nehnutelnosti;
@@ -21,5 +22,30 @@ public class Parcela extends AreaObject implements Comparable<Parcela>{
     @Override
     public int compareTo(Parcela o) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;  // If the objects are the same, they are equal.
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;  // If the other object is null or of a different class, they are not equal.
+        }
+
+        Parcela other = (Parcela) o;
+
+        // Compare all the fields for equality.
+        return this.getSupisneCislo() == other.getSupisneCislo() &&
+                Objects.equals(this.getPopis(), other.getPopis()) &&
+                Objects.equals(this.getMinGPS(), other.getMinGPS()) &&
+                Objects.equals(this.getMaxGPS(), other.getMaxGPS()) &&
+                Objects.equals(this.getNehnutelnosti(), other.getNehnutelnosti());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nehnutelnosti);
     }
 }

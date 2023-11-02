@@ -188,6 +188,47 @@ public class QuadTree<T extends Comparable<T>>  {
         return data;
     }
 
+    public QuadTreeNodeKeys<T> findByData(T p_data_to_find) {
+        if (p_data_to_find == null){
+            return null;
+            //TODO EXCEPTION
+        }
+
+        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
+
+        if (root == null) {
+            return null;
+        }
+
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            QuadTreeNode<T> currentNode = stack.pop();
+
+            if ( currentNode.getNodeKeys() != null && currentNode.getData() != null ) {
+                if (currentNode.getData().equals(p_data_to_find)) {
+                    return currentNode.getNodeKeys();
+                }
+            }
+
+            for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
+            {
+                if (key.getData().equals(p_data_to_find)) {
+                    return key;
+                }
+            }
+
+            if (currentNode != null && currentNode.getSons() != null) {
+                for (int i = 0; i < 4; i++) { // go through sons of node
+                    stack.push(currentNode.getSons()[i]);
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     public LinkedList<QuadTreeNodeKeys<T>> find(double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
         return this.find(this.root, p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind);
     }
@@ -244,7 +285,13 @@ public class QuadTree<T extends Comparable<T>>  {
         return this.findContainedOrIntersecting(this.root, p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind);
     }
 
-    public QuadTreeNodeKeys<T> delete(double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind, int p_ID) {
+    public T deleteByData(T p_data_to_remove) {
+        QuadTreeNodeKeys<T> keys = this.findByData(p_data_to_remove);
+
+        return (this.delete(keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getID(), keys.getData())).getData();
+    }
+
+    public QuadTreeNodeKeys<T> delete(double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind, int p_ID, T data) {
         if (!(p_minXToFind >= minX && p_maxXToFind <= maxX && p_minYToFind >= minY && p_maxYToFind <= maxY)){
             return null;
             //TODO EXCEPTION
@@ -254,7 +301,7 @@ public class QuadTree<T extends Comparable<T>>  {
         boolean end = false;
 
         QuadTreeNodeKeys<T> dataFound = null;
-        QuadTreeNodeKeys<T> helpKeys = new QuadTreeNodeKeys<T>(p_ID,p_minXToFind,p_minYToFind, p_maxXToFind, p_maxYToFind, null);
+        QuadTreeNodeKeys<T> helpKeys = new QuadTreeNodeKeys<T>(p_ID,p_minXToFind,p_minYToFind, p_maxXToFind, p_maxYToFind, data);
         Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
         QuadTreeNode<T> helpNode = new QuadTreeNode<T>(p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind,0, null);
 

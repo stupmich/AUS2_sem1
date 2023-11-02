@@ -1,5 +1,7 @@
 package Structures;
 
+import java.util.Objects;
+
 public class QuadTreeNodeKeys<T extends Comparable<T>> {
     private int ID;
     private double minXElement;
@@ -70,7 +72,13 @@ public class QuadTreeNodeKeys<T extends Comparable<T>> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QuadTreeNodeKeys<?> that = (QuadTreeNodeKeys<?>) o;
-        return ID == that.ID && Double.compare(that.minXElement, minXElement) == 0 && Double.compare(that.minYElement, minYElement) == 0 && Double.compare(that.maxXElement, maxXElement) == 0 && Double.compare(that.maxYElement, maxYElement) == 0;
+        return ID == that.ID && Double.compare(that.minXElement, minXElement) == 0 && Double.compare(that.minYElement, minYElement) == 0 &&
+                Double.compare(that.maxXElement, maxXElement) == 0 && Double.compare(that.maxYElement, maxYElement) == 0 &&
+                Objects.equals(data, that.data);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(ID, minXElement, minYElement, maxXElement, maxYElement, data);
+    }
 }
