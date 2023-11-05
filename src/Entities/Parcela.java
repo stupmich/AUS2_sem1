@@ -11,6 +11,11 @@ public class Parcela extends AreaObject implements Comparable<Parcela>{
         nehnutelnosti = new LinkedList<Nehnutelnost>();
     }
 
+    public Parcela(Parcela other) {
+        super(other.getSupisneCislo(), other.getPopis(), other.getMinGPS(), other.getMaxGPS());
+        this.nehnutelnosti = new LinkedList<Nehnutelnost>(other.getNehnutelnosti());
+    }
+
     public LinkedList<Nehnutelnost> getNehnutelnosti() {
         return nehnutelnosti;
     }
@@ -47,5 +52,10 @@ public class Parcela extends AreaObject implements Comparable<Parcela>{
     @Override
     public int hashCode() {
         return Objects.hash(nehnutelnosti);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

@@ -1,7 +1,6 @@
 package Entities;
 
 public class AreaObject {
-    private int ID;
     private int supisneCislo;
     private String popis;
     private GPS minGPS;
@@ -12,6 +11,9 @@ public class AreaObject {
         this.popis = popis;
         this.minGPS = minGPS;
         this.maxGPS = maxGPS;
+    }
+
+    public AreaObject() {
     }
 
     public int getSupisneCislo() {
@@ -44,5 +46,14 @@ public class AreaObject {
 
     public void setMaxGPS(GPS maxGPS) {
         this.maxGPS = maxGPS;
+    }
+
+    @Override
+    public String toString() {
+        return   supisneCislo +
+                ";" + popis +
+                ";" + minGPS.toStringCSV() +
+                ";" + maxGPS.toStringCSV() +
+                ";";
     }
 }

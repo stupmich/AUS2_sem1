@@ -377,19 +377,89 @@ public class SystemApp {
                                          char min_y, double min_positionY, char min_x, double min_positionX,
                                          char max_y, double max_positionY, char max_x, double max_positionX) {
 
-        p_nehnutelnost_to_edit.setSupisneCislo(supisneCislo);
-        p_nehnutelnost_to_edit.setPopis(popis);
+        QuadTreeNodeKeys<Nehnutelnost> keys = treeNehnutelnosti.findByData(p_nehnutelnost_to_edit);
+        keys.setMinXElement(min_positionX);
+        keys.setMinYElement(min_positionY);
+        keys.setMaxXElement(max_positionX);
+        keys.setMaxYElement(max_positionY);
 
-        p_nehnutelnost_to_edit.getMinGPS().setX(min_x);
-        p_nehnutelnost_to_edit.getMinGPS().setPositionX(min_positionX);
-        p_nehnutelnost_to_edit.getMinGPS().setY(min_y);
-        p_nehnutelnost_to_edit.getMinGPS().setPositionY(min_positionY);
+        keys.getData().setSupisneCislo(supisneCislo);
+        keys.getData().setPopis(popis);
 
-        p_nehnutelnost_to_edit.getMaxGPS().setX(max_x);
-        p_nehnutelnost_to_edit.getMaxGPS().setPositionX(max_positionX);
-        p_nehnutelnost_to_edit.getMaxGPS().setY(max_y);
-        p_nehnutelnost_to_edit.getMaxGPS().setPositionY(max_positionY);
+        keys.getData().getMinGPS().setX(min_x);
+        keys.getData().getMinGPS().setPositionX(min_positionX);
+        keys.getData().getMinGPS().setY(min_y);
+        keys.getData().getMinGPS().setPositionY(min_positionY);
 
-        return p_nehnutelnost_to_edit;
+        keys.getData().getMaxGPS().setX(max_x);
+        keys.getData().getMaxGPS().setPositionX(max_positionX);
+        keys.getData().getMaxGPS().setY(max_y);
+        keys.getData().getMaxGPS().setPositionY(max_positionY);
+
+        LinkedList<Parcela> parcely_old = new LinkedList<Parcela>(keys.getData().getParcely());
+        LinkedList<Parcela> parcely_new = treeParcely.findContainedOrIntersectingData(min_positionX, min_positionY, max_positionX, max_positionY);
+
+        keys.getData().getParcely().clear();
+        keys.getData().getParcely().addAll(parcely_new);
+
+        for ( Parcela parcela : parcely_new ) {
+            parcela.getNehnutelnosti().add(keys.getData());
+        }
+
+        for(Parcela parcela_old : parcely_old) {
+            LinkedList<Nehnutelnost> nehnutelnosti = treeNehnutelnosti.findContainedOrIntersectingData(parcela_old.getMinGPS().getPositionX(),parcela_old.getMinGPS().getPositionY(),
+                                                              parcela_old.getMaxGPS().getPositionX(),parcela_old.getMaxGPS().getPositionY());
+
+            if (!nehnutelnosti.contains(keys.getData())) {
+                parcela_old.getNehnutelnosti().remove(keys.getData());
+            }
+        }
+
+        return keys.getData();
+    }
+
+    public Parcela editParcela(Parcela p_parcela_to_edit, int supisneCislo, String popis,
+                               char min_y, double min_positionY, char min_x, double min_positionX,
+                               char max_y, double max_positionY, char max_x, double max_positionX) {
+
+        QuadTreeNodeKeys<Parcela> keys = treeParcely.findByData(p_parcela_to_edit);
+        keys.setMinXElement(min_positionX);
+        keys.setMinYElement(min_positionY);
+        keys.setMaxXElement(max_positionX);
+        keys.setMaxYElement(max_positionY);
+
+        keys.getData().setSupisneCislo(supisneCislo);
+        keys.getData().setPopis(popis);
+
+        keys.getData().getMinGPS().setX(min_x);
+        keys.getData().getMinGPS().setPositionX(min_positionX);
+        keys.getData().getMinGPS().setY(min_y);
+        keys.getData().getMinGPS().setPositionY(min_positionY);
+
+        keys.getData().getMaxGPS().setX(max_x);
+        keys.getData().getMaxGPS().setPositionX(max_positionX);
+        keys.getData().getMaxGPS().setY(max_y);
+        keys.getData().getMaxGPS().setPositionY(max_positionY);
+
+        LinkedList<Nehnutelnost> nehnutelnosti_old = new LinkedList<Nehnutelnost>(keys.getData().getNehnutelnosti());
+        LinkedList<Nehnutelnost> nehnutelnosti_new = treeNehnutelnosti.findContainedOrIntersectingData(min_positionX, min_positionY, max_positionX, max_positionY);
+
+        keys.getData().getNehnutelnosti().clear();
+        keys.getData().getNehnutelnosti().addAll(nehnutelnosti_new);
+
+        for ( Nehnutelnost nehnutelnost : nehnutelnosti_new ) {
+            nehnutelnost.getParcely().add(keys.getData());
+        }
+
+        for(Nehnutelnost nehnutelnost_old : nehnutelnosti_old) {
+            LinkedList<Parcela> parcely = treeParcely.findContainedOrIntersectingData(nehnutelnost_old.getMinGPS().getPositionX(),nehnutelnost_old.getMinGPS().getPositionY(),
+                    nehnutelnost_old.getMaxGPS().getPositionX(),nehnutelnost_old.getMaxGPS().getPositionY());
+
+            if (!parcely.contains(keys.getData())) {
+                nehnutelnost_old.getParcely().remove(keys.getData());
+            }
+        }
+
+        return keys.getData();
     }
 }

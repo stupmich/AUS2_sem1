@@ -13,6 +13,14 @@ public class GPS {
         this.positionX = positionX;
     }
 
+    public GPS(String stringFromFile) {
+        String[] parts = stringFromFile.split(",");
+        this.y = parts[0].charAt(0);
+        this.positionY = Double.parseDouble(parts[1]);
+        this.x = parts[2].charAt(0);
+        this.positionX = Double.parseDouble(parts[3]);
+    }
+
     public char getY() {
         return y;
     }
@@ -52,4 +60,12 @@ public class GPS {
                 ", Length=" + x +
                 " " + positionX;
     }
+
+    public String toStringCSV() {
+        return y +
+                "," + positionY +
+                "," + x +
+                "," + positionX;
+    }
+
 }

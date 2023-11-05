@@ -81,4 +81,14 @@ public class QuadTreeNodeKeys<T extends Comparable<T>> {
     public int hashCode() {
         return Objects.hash(ID, minXElement, minYElement, maxXElement, maxYElement, data);
     }
+
+    @Override
+    public String toString() {
+        return  ID +
+                ";" + minXElement +
+                ";" + minYElement +
+                ";" + maxXElement +
+                ";" + maxYElement +
+                "\n" + data.toString();
+    }
 }

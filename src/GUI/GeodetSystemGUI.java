@@ -6,8 +6,10 @@ import Entities.Parcela;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class GeodetSystemGUI extends JFrame implements ActionListener, MouseListener {
 
@@ -32,6 +34,7 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
     private DefaultTableModel nehnutelnostDeleteTableModel;
     private DefaultTableModel parcelaDeleteTableModel;
     private DefaultTableModel nehnutelnostEditTableModel;
+    private DefaultTableModel parcelaEditTableModel;
 
     private JTextField tree_minX;
     private JTextField tree_minY;
@@ -113,6 +116,7 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
     private JTextField widthPositionEditSearchNehnutelnost;
     private JTextField lengthPositionEditSearchNehnutelnost;
     private JTable listEditNehnutelnost;
+    private JTable listEditNParcela;
     private JTextField supisneCisloEditNehnutelnost;
     private JTextField popisEditNehnutelnost;
     private JTextField minWidthCharEditNehnutelnost;
@@ -124,12 +128,30 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
     private JTextField minLengthPositionEditNehnutelnost;
     private JTextField maxLengthPositionEditNehnutelnost;
     private JButton editNehnutelnostiEditButton;
+    private JTable listEditParcela;
+    private JTextField widthCharEditSearchParcela;
+    private JTextField lengthCharEditSearchParcela;
+    private JTextField widthPositionEditSearchParcela;
+    private JTextField lengthPositionEditSearchParcela;
+    private JButton editParcelySearchButton;
+    private JTextField supisneCisloEditParcela;
+    private JTextField popisEditParcela;
+    private JTextField minWidthCharEditParcela;
+    private JTextField minLengthCharEditParcela;
+    private JTextField minWidthPositionEditParcela;
+    private JTextField minLengthPositionEditParcela;
+    private JTextField maxWidthCharEditParcela;
+    private JTextField maxLengthCharEditParcela;
+    private JTextField maxWidthPositionEditParcela;
+    private JTextField maxLengthPositionEditParcela;
+    private JButton editParcelyEditButton;
 
 
     private SystemApp app;
     LinkedList<Nehnutelnost> nehnutelnosti;
     LinkedList<Parcela> parcely;
     Nehnutelnost nehnutelnost_to_edit;
+    Parcela parcela_to_edit;
 
     public GeodetSystemGUI(){
         this.setContentPane(mainPanel);
@@ -143,68 +165,138 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
         nehnutelnosti = new LinkedList<Nehnutelnost>();
         parcely = new LinkedList<Parcela>();
 
-        nehnutelnostTableModel = new DefaultTableModel();
+        nehnutelnostTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         nehnutelnostTableModel.addColumn("Cislo");
         nehnutelnostTableModel.addColumn("Popis");
         nehnutelnostTableModel.addColumn("GPS1");
         nehnutelnostTableModel.addColumn("GPS2");
         listSearchNehnutelnost.setModel(nehnutelnostTableModel);
 
-        nehnutelnostAllTableModel = new DefaultTableModel();
+
+        nehnutelnostAllTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         nehnutelnostAllTableModel.addColumn("Cislo");
         nehnutelnostAllTableModel.addColumn("Popis");
         nehnutelnostAllTableModel.addColumn("GPS1");
         nehnutelnostAllTableModel.addColumn("GPS2");
         listSearchAllNehnutelnost.setModel(nehnutelnostAllTableModel);
 
-        nehnutelnostInsertTableModel = new DefaultTableModel();
+        nehnutelnostInsertTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         nehnutelnostInsertTableModel.addColumn("Cislo");
         nehnutelnostInsertTableModel.addColumn("Popis");
         nehnutelnostInsertTableModel.addColumn("GPS1");
         nehnutelnostInsertTableModel.addColumn("GPS2");
         listNehnutelnostInsert.setModel(nehnutelnostInsertTableModel);
 
-        parcelaInsertTableModel = new DefaultTableModel();
+        parcelaInsertTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+
         parcelaInsertTableModel.addColumn("Cislo");
         parcelaInsertTableModel.addColumn("Popis");
         parcelaInsertTableModel.addColumn("GPS1");
         parcelaInsertTableModel.addColumn("GPS2");
         listParcelaInsert.setModel(parcelaInsertTableModel);
 
-        parcelaAllTableModel = new DefaultTableModel();
+        parcelaAllTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         parcelaAllTableModel.addColumn("Cislo");
         parcelaAllTableModel.addColumn("Popis");
         parcelaAllTableModel.addColumn("GPS1");
         parcelaAllTableModel.addColumn("GPS2");
         listSearchAllParcela.setModel(parcelaAllTableModel);
 
-        parcelaSearchTableModel = new DefaultTableModel();
+        parcelaSearchTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         parcelaSearchTableModel.addColumn("Cislo");
         parcelaSearchTableModel.addColumn("Popis");
         parcelaSearchTableModel.addColumn("GPS1");
         parcelaSearchTableModel.addColumn("GPS2");
         listSearchParcela.setModel(parcelaSearchTableModel);
 
-        nehnutelnostDeleteTableModel = new DefaultTableModel();
+        nehnutelnostDeleteTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         nehnutelnostDeleteTableModel.addColumn("Cislo");
         nehnutelnostDeleteTableModel.addColumn("Popis");
         nehnutelnostDeleteTableModel.addColumn("GPS1");
         nehnutelnostDeleteTableModel.addColumn("GPS2");
         listDeleteNehnutelnost.setModel(nehnutelnostDeleteTableModel);
 
-        parcelaDeleteTableModel = new DefaultTableModel();
+        parcelaDeleteTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         parcelaDeleteTableModel.addColumn("Cislo");
         parcelaDeleteTableModel.addColumn("Popis");
         parcelaDeleteTableModel.addColumn("GPS1");
         parcelaDeleteTableModel.addColumn("GPS2");
         listDeleteParcela.setModel(parcelaDeleteTableModel);
 
-        nehnutelnostEditTableModel = new DefaultTableModel();
+        nehnutelnostEditTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
         nehnutelnostEditTableModel.addColumn("Cislo");
         nehnutelnostEditTableModel.addColumn("Popis");
         nehnutelnostEditTableModel.addColumn("GPS1");
         nehnutelnostEditTableModel.addColumn("GPS2");
         listEditNehnutelnost.setModel(nehnutelnostEditTableModel);
+        listEditNehnutelnost.setCellSelectionEnabled(false);
+
+        parcelaEditTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+        parcelaEditTableModel.addColumn("Cislo");
+        parcelaEditTableModel.addColumn("Popis");
+        parcelaEditTableModel.addColumn("GPS1");
+        parcelaEditTableModel.addColumn("GPS2");
+        listEditParcela.setModel(parcelaEditTableModel);
 
         fillSystemButton.addActionListener(this);
 
@@ -221,10 +313,12 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
         deleteParcelaButton.addActionListener(this);
 
         editNehnutelnostiSearchButton.addActionListener(this);
+        editParcelySearchButton.addActionListener(this);
         editNehnutelnostiEditButton.addActionListener(this);
-
+        editParcelyEditButton.addActionListener(this);
 
         listEditNehnutelnost.addMouseListener(this);
+        listEditParcela.addMouseListener(this);
     }
 
     @Override
@@ -345,6 +439,7 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
             for (Nehnutelnost nehnutelnost : nehnutelnosti) {
                 nehnutelnostEditTableModel.addRow(new Object[]{nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
             }
+
         } else if (e.getSource() == editNehnutelnostiEditButton) {
             app.editNehnutelnost(nehnutelnost_to_edit, Integer.parseInt(this.supisneCisloEditNehnutelnost.getText()), this.popisEditNehnutelnost.getText(),
                                  this.minWidthCharEditNehnutelnost.getText().toCharArray()[0], Double.parseDouble(this.minWidthPositionEditNehnutelnost.getText()) ,
@@ -361,6 +456,30 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
                 nehnutelnostEditTableModel.addRow(new Object[]{nehnutelnost.getSupisneCislo(), nehnutelnost.getPopis(), nehnutelnost.getMinGPS().toString(), nehnutelnost.getMaxGPS().toString()});
             }
         }
+        else if (e.getSource() == editParcelySearchButton) {
+            parcely = this.app.searchParcela(widthCharEditSearchParcela.getText().toCharArray()[0], Double.parseDouble(widthPositionEditSearchParcela.getText()),
+                    lengthCharEditSearchParcela.getText().toCharArray()[0], Double.parseDouble(lengthPositionEditSearchParcela.getText()));
+
+            parcelaEditTableModel.setRowCount(0);
+            for (Parcela parcela : parcely) {
+                parcelaEditTableModel.addRow(new Object[]{parcela.getSupisneCislo(), parcela.getPopis(), parcela.getMinGPS().toString(), parcela.getMaxGPS().toString()});
+            }
+        } else if (e.getSource() == editParcelyEditButton) {
+            app.editParcela(parcela_to_edit, Integer.parseInt(this.supisneCisloEditParcela.getText()), this.popisEditParcela.getText(),
+                    this.minWidthCharEditParcela.getText().toCharArray()[0], Double.parseDouble(this.minWidthPositionEditParcela.getText()) ,
+                    this.minLengthCharEditParcela.getText().toCharArray()[0], Double.parseDouble(this.minLengthPositionEditParcela.getText()),
+                    this.maxWidthCharEditParcela.getText().toCharArray()[0], Double.parseDouble(this.maxWidthPositionEditParcela.getText()) ,
+                    this.maxLengthCharEditParcela.getText().toCharArray()[0], Double.parseDouble(this.maxLengthPositionEditParcela.getText())
+            );
+
+            parcely = this.app.searchParcela(widthCharEditSearchParcela.getText().toCharArray()[0], Double.parseDouble(widthPositionEditSearchParcela.getText()),
+                    lengthCharEditSearchParcela.getText().toCharArray()[0], Double.parseDouble(lengthPositionEditSearchParcela.getText()));
+
+            parcelaEditTableModel.setRowCount(0);
+            for (Parcela parcela : parcely) {
+                nehnutelnostEditTableModel.addRow(new Object[]{parcela.getSupisneCislo(), parcela.getPopis(), parcela.getMinGPS().toString(), parcela.getMaxGPS().toString()});
+            }
+        }
     }
 
     @Override
@@ -368,7 +487,6 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
         if (e.getSource() == listEditNehnutelnost) {
             int row = listEditNehnutelnost.rowAtPoint(e.getPoint());
             if (row >= 0) {
-//                nehnutelnost_to_edit = nehnutelnosti.get(listEditNehnutelnost.getSelectedRow());
                 nehnutelnost_to_edit = new Nehnutelnost(nehnutelnosti.get(listEditNehnutelnost.getSelectedRow()));
 
                 this.supisneCisloEditNehnutelnost.setText(String.valueOf(nehnutelnost_to_edit.getSupisneCislo()));
@@ -384,12 +502,113 @@ public class GeodetSystemGUI extends JFrame implements ActionListener, MouseList
                 this.minLengthPositionEditNehnutelnost.setText(String.valueOf(nehnutelnost_to_edit.getMinGPS().getPositionX()));
                 this.maxLengthPositionEditNehnutelnost.setText(String.valueOf(nehnutelnost_to_edit.getMaxGPS().getPositionX()));
             }
+        } else if (e.getSource() == listEditParcela) {
+            int row = listEditParcela.rowAtPoint(e.getPoint());
+            if (row >= 0) {
+                parcela_to_edit = new Parcela(parcely.get(listEditParcela.getSelectedRow()));
+
+                this.supisneCisloEditParcela.setText(String.valueOf(parcela_to_edit.getSupisneCislo()));
+                this.popisEditParcela.setText(String.valueOf(parcela_to_edit.getPopis()));
+
+                this.minWidthCharEditParcela.setText(String.valueOf(parcela_to_edit.getMinGPS().getY()));
+                this.maxWidthCharEditParcela.setText(String.valueOf(parcela_to_edit.getMaxGPS().getY()));
+                this.minLengthCharEditParcela.setText(String.valueOf(parcela_to_edit.getMinGPS().getX(    )));
+                this.maxLengthCharEditParcela.setText(String.valueOf(parcela_to_edit.getMaxGPS().getX()));
+
+                this.minWidthPositionEditParcela.setText(String.valueOf(parcela_to_edit.getMinGPS().getPositionY()));
+                this.maxWidthPositionEditParcela.setText(String.valueOf(parcela_to_edit.getMaxGPS().getPositionY()));
+                this.minLengthPositionEditParcela.setText(String.valueOf(parcela_to_edit.getMinGPS().getPositionX()));
+                this.maxLengthPositionEditParcela.setText(String.valueOf(parcela_to_edit.getMaxGPS().getPositionX()));
+            }
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getClickCount() == 2) {
 
+            if (e.getSource() == listEditNehnutelnost) {
+                int row = listEditNehnutelnost.rowAtPoint(e.getPoint());
+
+                Nehnutelnost nehnutelnost = nehnutelnosti.get(row);
+                if (row >= 0) {
+                    NehnutelnostDetailyWindow detailsWindow = new NehnutelnostDetailyWindow(nehnutelnost);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listDeleteNehnutelnost) {
+                int row = listDeleteNehnutelnost.rowAtPoint(e.getPoint());
+
+                Nehnutelnost nehnutelnost = nehnutelnosti.get(row);
+                if (row >= 0) {
+                    NehnutelnostDetailyWindow detailsWindow = new NehnutelnostDetailyWindow(nehnutelnost);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listSearchNehnutelnost) {
+                int row = listSearchNehnutelnost.rowAtPoint(e.getPoint());
+
+                Nehnutelnost nehnutelnost = nehnutelnosti.get(row);
+                if (row >= 0) {
+                    NehnutelnostDetailyWindow detailsWindow = new NehnutelnostDetailyWindow(nehnutelnost);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listSearchAllNehnutelnost) {
+                int row = listSearchAllNehnutelnost.rowAtPoint(e.getPoint());
+
+                Nehnutelnost nehnutelnost = nehnutelnosti.get(row);
+                if (row >= 0) {
+                    NehnutelnostDetailyWindow detailsWindow = new NehnutelnostDetailyWindow(nehnutelnost);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listNehnutelnostInsert) {
+                int row = listNehnutelnostInsert.rowAtPoint(e.getPoint());
+
+                Nehnutelnost nehnutelnost = nehnutelnosti.get(row);
+                if (row >= 0) {
+                    NehnutelnostDetailyWindow detailsWindow = new NehnutelnostDetailyWindow(nehnutelnost);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listEditParcela) {
+                int row = listEditParcela.rowAtPoint(e.getPoint());
+
+                Parcela parcela = parcely.get(row);
+                if (row >= 0) {
+                    ParcelaDetailyWindow detailsWindow = new ParcelaDetailyWindow(parcela);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listParcelaInsert) {
+                int row = listParcelaInsert.rowAtPoint(e.getPoint());
+
+                Parcela parcela = parcely.get(row);
+                if (row >= 0) {
+                    ParcelaDetailyWindow detailsWindow = new ParcelaDetailyWindow(parcela);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listDeleteParcela) {
+                int row = listDeleteParcela.rowAtPoint(e.getPoint());
+
+                Parcela parcela = parcely.get(row);
+                if (row >= 0) {
+                    ParcelaDetailyWindow detailsWindow = new ParcelaDetailyWindow(parcela);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listSearchParcela) {
+                int row = listSearchParcela.rowAtPoint(e.getPoint());
+
+                Parcela parcela = parcely.get(row);
+                if (row >= 0) {
+                    ParcelaDetailyWindow detailsWindow = new ParcelaDetailyWindow(parcela);
+                    detailsWindow.setVisible(true);
+                }
+            } else if (e.getSource() == listSearchAllParcela) {
+                int row = listSearchAllParcela.rowAtPoint(e.getPoint());
+
+                Parcela parcela = parcely.get(row);
+                if (row >= 0) {
+                    ParcelaDetailyWindow detailsWindow = new ParcelaDetailyWindow(parcela);
+                    detailsWindow.setVisible(true);
+                }
+            }
+        }
     }
 
     @Override

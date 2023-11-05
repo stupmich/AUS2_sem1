@@ -1,5 +1,11 @@
 package Structures;
 
+import Entities.GPS;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -281,8 +287,60 @@ public class QuadTree<T extends Comparable<T>>  {
         return data;
     }
 
+    private LinkedList<T> findContainedOrIntersectingData(QuadTreeNode<T> p_node, double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
+        if (!(p_minXToFind >= minX && p_maxXToFind <= maxX && p_minYToFind >= minY && p_maxYToFind <= maxY)){
+            return null;
+            //TODO EXCEPTION
+        }
+
+        LinkedList<T> data = new LinkedList<T>();
+        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
+        QuadTreeNode<T> helpNode = new QuadTreeNode<T>(p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind,0, null);
+
+        if (p_node == null) {
+            return null;
+        }
+
+        stack.push(p_node);
+
+        while (!stack.isEmpty()) {
+            QuadTreeNode<T> currentNode = stack.pop();
+
+            if ( currentNode.getNodeKeys() != null &&
+                    currentNode.getData() != null &&
+                    (helpNode.contains(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()) ||
+                            helpNode.intersects(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()))
+            )
+
+            {
+                data.add(currentNode.getNodeKeys().getData());
+            }
+
+            for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
+            {
+                if (helpNode.contains(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement()) ||
+                        helpNode.intersects(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
+                    data.add(key.getData());
+                }
+
+            }
+
+            if (currentNode != null && currentNode.getSons() != null) {
+                for (int i = 0; i < 4; i++) { // go through sons of node
+                    stack.push(currentNode.getSons()[i]); //TODO possible rework go only  through sons that at least intersect the area we search for
+                }
+            }
+        }
+
+        return data;
+    }
+
     public LinkedList<QuadTreeNodeKeys<T>> findContainedOrIntersecting(double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
         return this.findContainedOrIntersecting(this.root, p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind);
+    }
+
+    public LinkedList<T> findContainedOrIntersectingData(double p_minXToFind, double p_minYToFind, double p_maxXToFind, double p_maxYToFind) {
+        return this.findContainedOrIntersectingData(this.root, p_minXToFind, p_minYToFind, p_maxXToFind, p_maxYToFind);
     }
 
     public T deleteByData(T p_data_to_remove) {
@@ -614,5 +672,163 @@ public class QuadTree<T extends Comparable<T>>  {
 
     public int getMaxLevel() {
         return maxLevel;
+    }
+
+    public void saveToFile(String file_name) {
+        if (root == null ) {
+            return;
+        }
+
+        Stack<QuadTreeNode<T>> stack = new Stack<QuadTreeNode<T>>();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file_name))) {
+
+            writer.write(this.minX + ";" + this.minY + ";" + this.maxX + ";" + this.maxY + ";" + this.maxLevel);
+            writer.write("\n");
+
+            stack.push(this.getRoot());
+
+            while (!stack.isEmpty()) {
+                QuadTreeNode<T> currentNode = stack.pop();
+
+                if (currentNode.getNodeKeys() != null) {
+                    writer.write(currentNode.getNodeKeys().toString());
+                    writer.write("\n");
+                }
+
+                if (currentNode.getIntersectingData().size() != 0 &&currentNode.getIntersectingData() != null) {
+                    for(QuadTreeNodeKeys<T> keys : currentNode.getIntersectingData() ) {
+                        writer.write(keys.toString());
+                        writer.write("\n");
+                    }
+                }
+
+
+                if (currentNode != null && currentNode.getSons() != null) {
+                    for (int i = 0; i < 4; i++) { // go through sons of node
+                        stack.push(currentNode.getSons()[i]);
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public QuadTree<T> loadFromFile(String file_name, Class<T> p_clazz) {
+        Class<T> clazz = p_clazz;
+        QuadTree<T> loadedTree = null;
+
+        int linesWentThrough = 0;
+        String line;
+
+        double min_x = 0;
+        double min_y = 0;
+        double max_x = 0;
+        double max_y = 0;
+        T data = null;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file_name))) {
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+
+                if (linesWentThrough == 0) { // Load attributes of tree
+                    linesWentThrough++;
+                    loadedTree = new QuadTree<T>(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2]),
+                                                 Double.parseDouble(parts[3]),Integer.parseInt(parts[4]));
+                    continue;
+                }
+
+                if (linesWentThrough % 2 == 1) { // odd lines are boundaries
+                    min_x = Double.parseDouble(parts[1]);
+                    min_y = Double.parseDouble(parts[2]);
+                    max_x = Double.parseDouble(parts[3]);
+                    max_y = Double.parseDouble(parts[4]);
+                } else { // even lines are data
+                    try {
+                        Constructor<T> constructor = clazz.getDeclaredConstructor(); // dynamic constructor
+                        data = constructor.newInstance();
+
+                        Field[] fields = clazz.getDeclaredFields(); // get attributes
+
+                        for (int i = 0; i < fields.length ; i++) { // go through attributes and set their value loaded from file
+                            Field field = fields[i];
+                            field.setAccessible(true);
+
+                            if (i < parts.length) {
+                                String value = parts[i];
+                                Class<?> fieldType = field.getType();
+
+                                if (fieldType == String.class) {
+                                    field.set(data, value);
+                                } else if (fieldType == int.class || fieldType == Integer.class) {
+                                    field.set(data, Integer.parseInt(value));
+                                } else if (fieldType == double.class || fieldType == Double.class) {
+                                    field.set(data, Double.parseDouble(value));
+                                } else if (fieldType == boolean.class || fieldType == Boolean.class) {
+                                    field.set(data, Boolean.parseBoolean(value));
+                                } else if (fieldType == char.class || fieldType == Character.class) {
+                                    field.set(data, value.charAt(0));
+                                } else if (fieldType == long.class || fieldType == Long.class) {
+                                    field.set(data, Long.parseLong(value));
+                                } else if (fieldType == float.class || fieldType == Float.class) {
+                                    field.set(data, Float.parseFloat(value));
+                                } else if (fieldType == short.class || fieldType == Short.class) {
+                                    field.set(data, Short.parseShort(value));
+                                } else if (fieldType == byte.class || fieldType == Byte.class) {
+                                    field.set(data, Byte.parseByte(value));
+                                } else {
+                                    // Try to use a constructor that accepts a String for complex types
+                                    try {
+                                        Constructor<?> constructorAttribute = fieldType.getConstructor(String.class);
+                                        field.set(data, constructorAttribute.newInstance(value));
+                                    } catch (NoSuchMethodException e) {
+                                        throw new IllegalArgumentException("No appropriate constructor for field type: " + fieldType, e);
+                                    }
+                                }
+                            }
+                        }
+
+                    } catch (NoSuchMethodException e) { // primitive types and wrapper classes
+                        if (clazz == String.class) {
+                            String data_string = parts[0];
+                            data = (T) data_string;
+                        } else if (clazz == int.class || clazz == Integer.class) {
+                            Integer data_int = Integer.parseInt(parts[0]);
+                            data = (T) data_int;
+                        } else if (clazz == double.class || clazz == Double.class) {
+                            Double data_double = Double.parseDouble(parts[0]);
+                            data = (T) data_double;
+                        } else if (clazz == boolean.class || clazz == Boolean.class) {
+                            Boolean data_bool = Boolean.parseBoolean(parts[0]);
+                            data = (T) data_bool;
+                        } else if (clazz == char.class || clazz == Character.class) {
+                            Character data_char = parts[0].charAt(0);
+                            data = (T) data_char;
+                        } else if (clazz == long.class || clazz == Long.class) {
+                            Long data_long = Long.parseLong(parts[0]);
+                            data = (T) data_long;
+                        } else if (clazz == float.class || clazz == Float.class) {
+                            Float data_float = Float.parseFloat(parts[0]);
+                            data = (T) data_float;
+                        } else if (clazz == short.class || clazz == Short.class) {
+                            Short data_short = Short.parseShort(parts[0]);
+                            data = (T) data_short;
+                        }
+                    }
+
+                    loadedTree.insert(min_x,min_y,max_x,max_y, data); // insert data to the tree
+
+                }
+                linesWentThrough++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return loadedTree;
     }
 }

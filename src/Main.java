@@ -1,18 +1,18 @@
+import Entities.AreaObject;
+import Entities.GPS;
+import Entities.Nehnutelnost;
 import GUI.GeodetSystemGUI;
 import Structures.QuadTree;
 import Structures.QuadTreeNodeKeys;
 import Tester.Tester;
+import com.sun.nio.sctp.NotificationHandler;
 
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        GeodetSystemGUI gui = new GeodetSystemGUI();
+//        GeodetSystemGUI gui = new GeodetSystemGUI();
 
-
-
-
-//
 //        Tester tester = new Tester();
 //        tester.testTree(10000,50,20,30,0,0,100,100,10, 100);
 
@@ -32,15 +32,38 @@ public class Main {
 
 
 
-
-
-
-//        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 10);
+//        QuadTree<Nehnutelnost> tree = new QuadTree<Nehnutelnost>(0,0,100,100, 10);
 //
-//        tree.insert(10,10,20,20,1);
+//        tree.insert(10,10,20,20,new Nehnutelnost(2,"AGA",new GPS('N',60,'E',60),
+//                new GPS('N',61,'E',61)));
+//        tree.insert(20,20,30,30,new Nehnutelnost(3,"AhjrjrA",new GPS('N',65,'E',65),
+//                new GPS('N',66,'E',66)));
+//        tree.insert(50,50,60,60,new Nehnutelnost(3,"AhjrjrA",new GPS('N',65,'E',65),
+//                new GPS('N',66,'E',66)));
+//        tree.saveToFile("tree.csv");
+//        tree.loadFromFile("tree.csv", Nehnutelnost.class);
+
+//        QuadTree<Boolean> tree = new QuadTree<Boolean>(0,0,100,100, 10);
+//
+//        Boolean d = true;
+//
+//        tree.insert(10.0,10.0,20.0,20.0,d);
 //        tree.insert(40,40,60,60,2);
 //        tree.insert(10,30,50,50,2);
-//
+//        tree.insert(10,10,20,20,1);
+//        tree.insert(30,30,40,40,2);
+//        tree.insert(80,80,100,100,3);
+//        tree.insert(80,80,100,100,4);
+//        tree.insert(50,50,60,60,5);
+//        tree.insert(20,20,30,30,6);
+//        tree.insert(20,90,30,92,7);
+//        tree.insert(90,10,95,30,8);
+//        tree.insert(99,99,100,100,9);
+//        tree.insert(99,99,100,100,10);
+
+//        tree.saveToFile("treeint.csv");
+//        tree.loadFromFile("treeint.csv", Boolean.class);
+
 //        QuadTreeNodeKeys<Integer> k = tree.findByData(2);
 //
 //        ArrayList<QuadTreeNodeKeys<Integer>> al = tree.findContainedOrIntersecting(tree.getRoot(),0,0,50,50);
