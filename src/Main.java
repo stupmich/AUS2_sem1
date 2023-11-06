@@ -1,4 +1,4 @@
-import Entities.AreaObject;
+
 import Entities.GPS;
 import Entities.Nehnutelnost;
 import GUI.GeodetSystemGUI;
@@ -13,11 +13,18 @@ public class Main {
     public static void main(String[] args) {
 //        GeodetSystemGUI gui = new GeodetSystemGUI();
 
-//        Tester tester = new Tester();
-//        tester.testTree(10000,50,20,30,0,0,100,100,10, 100);
+        Tester tester = new Tester();
 
+        QuadTree<Integer> tree = new QuadTree<Integer>(0,0,100,100, 5);
+        tester.testTree(10000,100,0,0,0,0,
+                100,100,10, 100, 5, tree);
 
+        System.out.println("filled");
 
+        tester.testTree(10000,100,0,0,0,0,
+                100,100,10, 100, 5, tree);
+
+        System.out.println("insert");
 
 
 

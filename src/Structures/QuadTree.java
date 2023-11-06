@@ -261,8 +261,8 @@ public class QuadTree<T extends Comparable<T>>  {
             if ( currentNode.getNodeKeys() != null &&
                     currentNode.getData() != null &&
                     (helpNode.contains(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()) ||
-                            helpNode.intersects(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()))
-            )
+                            helpNode.intersects(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement()) ||
+                                helpNode.isContainedBy(currentNode.getMinXElement(),currentNode.getMinYElement(),currentNode.getMaxXElement(),currentNode.getMaxYElement())))
 
             {
                 data.add(currentNode.getNodeKeys());
@@ -271,7 +271,8 @@ public class QuadTree<T extends Comparable<T>>  {
             for ( QuadTreeNodeKeys<T> key : currentNode.getIntersectingData())
             {
                 if (helpNode.contains(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement()) ||
-                        helpNode.intersects(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
+                        helpNode.intersects(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement()) ||
+                        helpNode.isContainedBy(key.getMinXElement(),key.getMinYElement(),key.getMaxXElement(),key.getMaxYElement())) {
                     data.add(key);
                 }
 
@@ -528,25 +529,22 @@ public class QuadTree<T extends Comparable<T>>  {
     }
 
     public QuadTree<T> getOptimizedTree() {
-        LinkedList<QuadTreeNodeKeys<T>> tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
-        LinkedList<QuadTreeNodeKeys<T>> new_tree_keys = new LinkedList<QuadTreeNodeKeys<T>>();
-        LinkedList<QuadTreeNodeKeys<T>> intersectingDataNew = new LinkedList<QuadTreeNodeKeys<T>>();
-        LinkedList<QuadTreeNodeKeys<T>> intersectingDataCurrent = new LinkedList<QuadTreeNodeKeys<T>>();
+        LinkedList<QuadTreeNodeKeys<T>> tree_keys = this.find(this.minX, this.minY, this.maxX, this.maxY);
+        LinkedList<QuadTreeNodeKeys<T>> intersectingDataCurrent = this.findAllIntersectingData();
+        int bestNumberOfIntersectingData = intersectingDataCurrent.size();
 
-        QuadTree<T> optimized_tree = null;
-        QuadTree<T> help_tree = null;
+        // no intersecting data -> tree is perfecto
+        if (bestNumberOfIntersectingData == 0) {
+            return this;
+        }
 
-        double x10percent = (this.maxX - this.minX) * 0.2;
-        double y10percent = (this.maxY - this.minY) * 0.2;
-        int bestNumberOfIntersectingData = Integer.MAX_VALUE;
+        QuadTree<T> optimized_tree = this;
+        int currentMaxLevel = this.maxLevel;
 
         double min_max_X = Double.MIN_VALUE;
         double max_min_X = Double.MAX_VALUE;
         double min_max_Y = Double.MIN_VALUE;
         double max_min_Y = Double.MAX_VALUE;
-
-        tree_keys = this.find(this.root,this.minX,this.minY, this.maxX,this.maxY);
-        intersectingDataCurrent = this.findAllIntersectingData();
 
         for (Structures.QuadTreeNodeKeys<T> keys : tree_keys ) {
             if (keys.getMaxXElement() > min_max_X) {
@@ -564,43 +562,74 @@ public class QuadTree<T extends Comparable<T>>  {
             }
         }
 
-        for (double xChange = -1.0 * x10percent; xChange <= 1.0 * x10percent; xChange++) {
-            for (double yChange = -1.0 * y10percent; yChange <= 1.0 * y10percent; yChange++) {
+        // try to change max height of tree, max current * 2
+        for (int newMaxLevel = currentMaxLevel; newMaxLevel <= currentMaxLevel * 2; newMaxLevel++) {
 
-                if (this.minX + xChange > max_min_X) {
-                    continue;
-                }
+            // try to resize boundaries, <90% of original size, 110% of original size>
+            for (double sizeFactor = 0.9; sizeFactor <= 1.1; sizeFactor += 0.1) {
 
-                if (this.minY + yChange > max_min_Y) {
-                    continue;
-                }
+                // calculate new size based on the size factor
+                double newWidth = (this.maxX - this.minX) * sizeFactor;
+                double newHeight = (this.maxY - this.minY) * sizeFactor;
 
-                if (this.maxX + xChange < min_max_X) {
-                    continue;
-                }
+                // shift boundaries by 10 percent of size
+                double xShift = newWidth * 0.1;
+                double yShift = newHeight * 0.1;
 
-                if (this.maxY + yChange < min_max_Y) {
-                    continue;
-                }
+                // Try shifting the center of the QuadTree within the range of the original size
+                for (double xChange = this.minX - xShift; xChange <= this.maxX + xShift; xChange += 1) {
+                    for (double yChange = this.minY - yShift; yChange <= this.maxY + yShift; yChange += 1) {
 
-                help_tree = new QuadTree<T>(this.minX + xChange,this.minY + yChange,this.maxX + xChange,this.maxY + yChange, this.maxLevel);
+                        double newMinX = xChange - newWidth / 2;
+                        double newMaxX = xChange + newWidth / 2;
+                        double newMinY = yChange - newHeight / 2;
+                        double newMaxY = yChange + newHeight / 2;
 
-                for (QuadTreeNodeKeys<T> keys : tree_keys ) {
-                    help_tree.insert(help_tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData(),keys.getID() );
-                }
+                        if (newMinX > max_min_X) {
+                            continue;
+                        }
 
-                new_tree_keys = help_tree.find(help_tree.getRoot(),help_tree.minX, help_tree.minY, help_tree.maxX, help_tree.maxY);
+                        if (newMinY > max_min_Y) {
+                            continue;
+                        }
 
-                if (new_tree_keys.size() == tree_keys.size()) {
-                    intersectingDataNew = help_tree.findAllIntersectingData();
+                        if (newMaxX < min_max_X) {
+                            continue;
+                        }
 
-                    if (intersectingDataNew.size() < intersectingDataCurrent.size() && intersectingDataNew.size() < bestNumberOfIntersectingData) {
-                        bestNumberOfIntersectingData = intersectingDataNew.size();
-                        optimized_tree = help_tree;
+                        if (newMaxY < min_max_Y) {
+                            continue;
+                        }
+
+                        QuadTree<T> temp_tree = new QuadTree<>(newMinX, newMinY, newMaxX, newMaxY, newMaxLevel);
+
+                        // insert all data from original tree
+                        for (QuadTreeNodeKeys<T> keys : tree_keys) {
+                            temp_tree.insert(temp_tree.getRoot(), keys.getMinXElement(), keys.getMinYElement(), keys.getMaxXElement(), keys.getMaxYElement(), keys.getData(), keys.getID());
+                        }
+
+                        LinkedList<QuadTreeNodeKeys<T>> new_tree_keys = temp_tree.find(temp_tree.getRoot(),temp_tree.minX, temp_tree.minY, temp_tree.maxX, temp_tree.maxY);
+
+                        // check if all data were inserted from original tree
+                        if (new_tree_keys.size() == tree_keys.size()) {
+                            LinkedList<QuadTreeNodeKeys<T>> intersectingDataNew = temp_tree.findAllIntersectingData();
+
+                            // check if new tree is better than current best
+                            if (intersectingDataNew.size() < bestNumberOfIntersectingData) {
+                                bestNumberOfIntersectingData = intersectingDataNew.size();
+                                optimized_tree = temp_tree;
+
+                                // return if new tree is perfecto
+                                if (bestNumberOfIntersectingData == 0) {
+                                    return optimized_tree;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
         return optimized_tree;
     }
 

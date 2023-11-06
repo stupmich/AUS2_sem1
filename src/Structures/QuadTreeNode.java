@@ -44,7 +44,11 @@ public class QuadTreeNode<T extends Comparable<T> >  {
     }
 
     public boolean intersects(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
-        return !(p_maxXBoundary < minXBoundary || p_minXBoundary > maxXBoundary || p_maxYBoundary < minYBoundary || p_minYBoundary > maxYBoundary);
+        return !(p_maxXBoundary <= minXBoundary || p_minXBoundary >= maxXBoundary || p_maxYBoundary <= minYBoundary || p_minYBoundary >= maxYBoundary);
+    }
+
+    public boolean isContainedBy(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {
+        return (minXBoundary >= p_minXBoundary && maxXBoundary <= p_maxXBoundary && minYBoundary >= p_minYBoundary && maxYBoundary <= p_maxYBoundary);
     }
 
     public boolean intersectsInnerLines(double p_minXBoundary, double p_minYBoundary, double p_maxXBoundary, double p_maxYBoundary) {

@@ -18,6 +18,7 @@ public class Nehnutelnost implements Comparable<Nehnutelnost> {
         parcely = new LinkedList<Parcela>();
     }
     public Nehnutelnost() {
+        parcely = new LinkedList<Parcela>();
     }
 
     // Copy constructor for deep copy
@@ -26,7 +27,11 @@ public class Nehnutelnost implements Comparable<Nehnutelnost> {
         this.popis = other.getPopis();
         this.minGPS = other.getMinGPS();
         this.maxGPS = other.getMaxGPS();
-        this.parcely = new LinkedList<Parcela>(other.getParcely());
+        if (other.getParcely() == null) {
+            this.parcely = new LinkedList<Parcela>();
+        } else {
+            this.parcely = new LinkedList<Parcela>(other.getParcely());
+        }
     }
 
     public LinkedList<Parcela> getParcely() {

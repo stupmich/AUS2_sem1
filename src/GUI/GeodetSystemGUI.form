@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="43" width="1021" height="864"/>
+      <xy x="22" y="30" width="1021" height="864"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -34,7 +34,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="2801e" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="2801e" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="10" right="0"/>
                     <constraints/>
                     <properties/>
@@ -43,7 +43,7 @@
                       <grid id="4b8fe" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="10" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Parametre stromu"/>
@@ -71,7 +71,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="0"/>
+                              <text value="-180"/>
                             </properties>
                           </component>
                           <component id="20ba8" class="javax.swing.JTextField" binding="tree_minY">
@@ -81,7 +81,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="0"/>
+                              <text value="-180"/>
                             </properties>
                           </component>
                           <component id="16c1" class="javax.swing.JLabel">
@@ -99,7 +99,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="100"/>
+                              <text value="180"/>
                             </properties>
                           </component>
                           <component id="87484" class="javax.swing.JLabel">
@@ -117,7 +117,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="100"/>
+                              <text value="180"/>
                             </properties>
                           </component>
                           <component id="cd87b" class="javax.swing.JLabel">
@@ -135,7 +135,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="10"/>
+                              <text value="5"/>
                             </properties>
                           </component>
                         </children>
@@ -143,7 +143,7 @@
                       <grid id="7adca" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="10" right="0"/>
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Parametre parciel"/>
@@ -199,7 +199,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="8"/>
+                              <text value="2"/>
                             </properties>
                           </component>
                           <component id="b18b1" class="javax.swing.JLabel">
@@ -217,7 +217,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="8"/>
+                              <text value="2"/>
                             </properties>
                           </component>
                           <component id="adde5" class="javax.swing.JLabel">
@@ -243,7 +243,7 @@
                       <grid id="72d15" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="10" right="0"/>
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Parametre nehnutelností"/>
@@ -271,7 +271,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="2"/>
+                              <text value="0.5"/>
                             </properties>
                           </component>
                           <component id="95481" class="javax.swing.JTextField" binding="minLengthNehnutelnost">
@@ -281,7 +281,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="2"/>
+                              <text value="0.5"/>
                             </properties>
                           </component>
                           <component id="7b1dd" class="javax.swing.JLabel">
@@ -299,7 +299,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="4"/>
+                              <text value="1"/>
                             </properties>
                           </component>
                           <component id="d4537" class="javax.swing.JLabel">
@@ -317,7 +317,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="4"/>
+                              <text value="1"/>
                             </properties>
                           </component>
                           <component id="4b4bb" class="javax.swing.JLabel">
@@ -356,15 +356,214 @@
                           </component>
                         </children>
                       </grid>
-                      <vspacer id="178da">
+                      <grid id="95ab1" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                      </vspacer>
+                        <properties/>
+                        <border type="none"/>
+                        <children/>
+                      </grid>
                     </children>
                   </grid>
                 </children>
               </scrollpane>
+            </children>
+          </grid>
+          <grid id="39dff" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title="Aktuálne parametre stromov"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="ed13e" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="10" right="0"/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none" title="Aktuálne parametre stromu pre nehnuteľnosti"/>
+                <children>
+                  <component id="acb92" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Minimálna šírka"/>
+                    </properties>
+                  </component>
+                  <component id="4cd91" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Minimálna dĺžka"/>
+                    </properties>
+                  </component>
+                  <component id="cf500" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna šírka"/>
+                    </properties>
+                  </component>
+                  <component id="34640" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna dĺžka"/>
+                    </properties>
+                  </component>
+                  <component id="fc400" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna hĺbka"/>
+                    </properties>
+                  </component>
+                  <component id="af228" class="javax.swing.JLabel" binding="currentMinWidt">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="dcbe8" class="javax.swing.JLabel" binding="currentMinLength">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="bb0fb" class="javax.swing.JLabel" binding="currentMaxHeight">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="81331" class="javax.swing.JLabel" binding="currentMaxWidt">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="6ccee" class="javax.swing.JLabel" binding="currentMaxLength">
+                    <constraints>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <vspacer id="afe73">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <grid id="44252" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="10" right="0"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none" title="Aktuálne parametre stromu pre parcely"/>
+                <children>
+                  <component id="9a118" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Minimálna šírka"/>
+                    </properties>
+                  </component>
+                  <component id="a77a1" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Minimálna dĺžka"/>
+                    </properties>
+                  </component>
+                  <component id="31014" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna šírka"/>
+                    </properties>
+                  </component>
+                  <component id="65220" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna dĺžka"/>
+                    </properties>
+                  </component>
+                  <component id="8e723" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Maximálna hĺbka"/>
+                    </properties>
+                  </component>
+                  <component id="40b12" class="javax.swing.JLabel" binding="currentMinWidtParcela">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="45aa" class="javax.swing.JLabel" binding="currentMinLengthParcela">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="bbb9" class="javax.swing.JLabel" binding="currentMaxHeightParcela">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="6e10a" class="javax.swing.JLabel" binding="currentMaxWidtParcela">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                  <component id="8a69f" class="javax.swing.JLabel" binding="currentMaxLengthParcela">
+                    <constraints>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=" "/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="3f178" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -469,7 +668,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="70"/>
+                              <text value="61"/>
                             </properties>
                           </component>
                           <component id="96fbc" class="javax.swing.JButton" binding="searchNehnutelnostiButton">
@@ -582,7 +781,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="70"/>
+                              <text value="61"/>
                             </properties>
                           </component>
                           <component id="6c36a" class="javax.swing.JButton" binding="searchParcelyButton">
@@ -677,7 +876,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="75"/>
+                              <text value="50"/>
                             </properties>
                           </component>
                           <component id="66fc1" class="javax.swing.JLabel">
@@ -695,7 +894,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="75"/>
+                              <text value="50"/>
                             </properties>
                           </component>
                         </children>
@@ -1473,7 +1672,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="70"/>
+                              <text value="61"/>
                             </properties>
                           </component>
                         </children>
@@ -1799,7 +1998,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="70"/>
+                              <text value="61"/>
                             </properties>
                           </component>
                           <component id="e9973" class="javax.swing.JButton" binding="editParcelySearchButton">
@@ -2151,7 +2350,7 @@
                               </grid>
                             </constraints>
                             <properties>
-                              <text value="70"/>
+                              <text value="61"/>
                             </properties>
                           </component>
                           <component id="d91eb" class="javax.swing.JButton" binding="deleteNehnutelnostiSearchButton">
@@ -2336,7 +2535,7 @@
                       <text value="Názov súboru pre parcely"/>
                     </properties>
                   </component>
-                  <component id="5ab2c" class="javax.swing.JTextField">
+                  <component id="5ab2c" class="javax.swing.JTextField" binding="nameFileParcelaSave">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -2346,7 +2545,7 @@
                       <text value="parcely_quadtree.csv"/>
                     </properties>
                   </component>
-                  <component id="380db" class="javax.swing.JButton">
+                  <component id="380db" class="javax.swing.JButton" binding="saveButton">
                     <constraints>
                       <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -2362,7 +2561,7 @@
                       <text value="Názov súboru pre nehnuteľnosti"/>
                     </properties>
                   </component>
-                  <component id="26a3c" class="javax.swing.JTextField">
+                  <component id="26a3c" class="javax.swing.JTextField" binding="nameFileNehnutelnostSave">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -2405,7 +2604,7 @@
                       <text value="Názov súboru pre parcely"/>
                     </properties>
                   </component>
-                  <component id="45c03" class="javax.swing.JTextField">
+                  <component id="45c03" class="javax.swing.JTextField" binding="nameFileParcelaLoad">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -2415,7 +2614,7 @@
                       <text value="parcely_quadtree.csv"/>
                     </properties>
                   </component>
-                  <component id="bc95d" class="javax.swing.JButton">
+                  <component id="bc95d" class="javax.swing.JButton" binding="loadButton">
                     <constraints>
                       <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -2431,7 +2630,7 @@
                       <text value="Názov súboru pre nehnuteľnosti"/>
                     </properties>
                   </component>
-                  <component id="2b39a" class="javax.swing.JTextField">
+                  <component id="2b39a" class="javax.swing.JTextField" binding="nameFileNehnutelnostLoad">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>

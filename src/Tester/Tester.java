@@ -13,7 +13,9 @@ public class Tester {
     public Tester() {
     }
 
-    public void testTree(int p_number_operations, int p_percent_insert, int p_percent_delete,int p_percent_change_height, double p_minX, double p_minY, double p_maxX, double p_maxY, int p_maxLevel,int p_maxLevel_test) {
+    public void testTree(int p_number_operations, int p_percent_insert, int p_percent_delete,int p_percent_change_height,
+                         double p_minX, double p_minY, double p_maxX, double p_maxY, int p_maxLevel,int p_maxLevel_test, int p_seed,
+                         QuadTree<Integer> p_tree) {
         int random_numb_op = 0;
         int random_max_height = 0;
 //        int random_numb_data = 0;
@@ -30,7 +32,12 @@ public class Tester {
         int n_delete = 0;
         int n_change = 0;
 
-        QuadTree<Integer> tree = new QuadTree<Integer>(p_minX, p_minY, p_maxX, p_maxY, p_maxLevel);
+        QuadTree<Integer> tree;
+        if (p_tree == null) {
+            tree = new QuadTree<Integer>(p_minX, p_minY, p_maxX, p_maxY, p_maxLevel);
+        } else {
+            tree = p_tree;
+        }
 
         QuadTreeNodeKeys<Integer> keys = null;
 
@@ -41,7 +48,13 @@ public class Tester {
         ArrayList<Integer> wrong_numbers = new ArrayList<Integer>();
 
         Random random = new Random();
-        int seed = random.nextInt(100000);
+        int seed;
+        if (p_seed == -1) {
+            seed = random.nextInt(100000);
+        } else {
+            seed = p_seed;
+        }
+
         System.out.println(seed);
         random.setSeed(seed);
 

@@ -3,17 +3,36 @@ package Entities;
 import java.util.LinkedList;
 import java.util.Objects;
 
-public class Parcela extends AreaObject implements Comparable<Parcela>{
+public class Parcela implements Comparable<Parcela>{
+    private int supisneCislo;
+    private String popis;
+    private GPS minGPS;
+    private GPS maxGPS;
     private LinkedList<Nehnutelnost> nehnutelnosti;
 
     public Parcela(int cisloParcely, String popis, GPS minGPS, GPS maxGPS) {
-        super(cisloParcely, popis, minGPS, maxGPS);
+        this.supisneCislo = cisloParcely;
+        this.popis = popis;
+        this.minGPS = minGPS;
+        this.maxGPS = maxGPS;
+        nehnutelnosti = new LinkedList<Nehnutelnost>();
+    }
+
+    public Parcela() {
         nehnutelnosti = new LinkedList<Nehnutelnost>();
     }
 
     public Parcela(Parcela other) {
-        super(other.getSupisneCislo(), other.getPopis(), other.getMinGPS(), other.getMaxGPS());
-        this.nehnutelnosti = new LinkedList<Nehnutelnost>(other.getNehnutelnosti());
+        this.supisneCislo = other.getSupisneCislo();
+        this.popis = other.getPopis();
+        this.minGPS = other.getMinGPS();
+        this.maxGPS = other.getMaxGPS();
+        if (other.getNehnutelnosti() == null) {
+            this.nehnutelnosti = new LinkedList<Nehnutelnost>();
+        } else {
+            this.nehnutelnosti = new LinkedList<Nehnutelnost>(other.getNehnutelnosti());
+        }
+
     }
 
     public LinkedList<Nehnutelnost> getNehnutelnosti() {
@@ -54,8 +73,44 @@ public class Parcela extends AreaObject implements Comparable<Parcela>{
         return Objects.hash(nehnutelnosti);
     }
 
+    public int getSupisneCislo() {
+        return supisneCislo;
+    }
+
+    public void setSupisneCislo(int supisneCislo) {
+        this.supisneCislo = supisneCislo;
+    }
+
+    public String getPopis() {
+        return popis;
+    }
+
+    public void setPopis(String popis) {
+        this.popis = popis;
+    }
+
+    public GPS getMinGPS() {
+        return minGPS;
+    }
+
+    public void setMinGPS(GPS minGPS) {
+        this.minGPS = minGPS;
+    }
+
+    public GPS getMaxGPS() {
+        return maxGPS;
+    }
+
+    public void setMaxGPS(GPS maxGPS) {
+        this.maxGPS = maxGPS;
+    }
+
     @Override
     public String toString() {
-        return super.toString();
+        return   supisneCislo +
+                ";" + popis +
+                ";" + minGPS.toStringCSV() +
+                ";" + maxGPS.toStringCSV() +
+                ";";
     }
 }
