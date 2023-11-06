@@ -328,7 +328,7 @@ public class QuadTree<T extends Comparable<T>>  {
 
             if (currentNode != null && currentNode.getSons() != null) {
                 for (int i = 0; i < 4; i++) { // go through sons of node
-                    stack.push(currentNode.getSons()[i]); //TODO possible rework go only  through sons that at least intersect the area we search for
+                    stack.push(currentNode.getSons()[i]);
                 }
             }
         }
@@ -602,6 +602,7 @@ public class QuadTree<T extends Comparable<T>>  {
                         }
 
                         QuadTree<T> temp_tree = new QuadTree<>(newMinX, newMinY, newMaxX, newMaxY, newMaxLevel);
+                        temp_tree.currentMaxID = this.currentMaxID;
 
                         // insert all data from original tree
                         for (QuadTreeNodeKeys<T> keys : tree_keys) {
@@ -637,7 +638,7 @@ public class QuadTree<T extends Comparable<T>>  {
         QuadTree<T> optimized_tree = this.getOptimizedTree();
 
         if (optimized_tree != null) {
-            if (this.evaluateHealth(optimized_tree) < 80) {
+            if (this.evaluateHealth(optimized_tree) < 0.9) {
                 return optimized_tree;
             }
         }
